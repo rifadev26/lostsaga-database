@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Exo_2 } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 
 const exo2 = Exo_2({
   subsets: ["latin"],
@@ -26,9 +24,7 @@ export default function RootLayout({
       <body
         className={`${exo2.variable} ${exo2.className} flex min-h-screen flex-col antialiased`}
       >
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );
