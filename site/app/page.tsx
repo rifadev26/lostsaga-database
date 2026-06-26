@@ -1,7 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
 import { HeroCard } from "@/components/HeroCard";
-import { getAssetUrl } from "@/lib/data";
+import { ImageFallback } from "@/components/ImageFallback";
+import {
+  getAssetUrl,
+  getHeroArtworkCandidates,
+  isRegularHero,
+} from "@/lib/data";
 import { heroes } from "@/lib/server/data";
 import { Flame, ArrowRight, Sparkles } from "lucide-react";
 
@@ -10,9 +14,15 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  const latest = heroes[heroes.length - 1];
-  const featured = heroes[Math.floor(Math.random() * heroes.length)];
-  const latestHeroes = heroes.slice(-8).reverse();
+  const sortedHeroes = [...heroes].sort(
+    (a, b) => parseInt(a.code, 10) - parseInt(b.code, 10)
+  );
+  const regularHeroes = sortedHeroes.filter(isRegularHero);
+
+  const latest = regularHeroes[regularHeroes.length - 1] ?? sortedHeroes[sortedHeroes.length - 1];
+  const featured =
+    regularHeroes[Math.floor(Math.random() * regularHeroes.length)] ?? latest;
+  const latestHeroes = regularHeroes.slice(-8).reverse();
 
   return (
     <div className="mx-auto max-w-[1370px] px-4 py-6 sm:px-6 lg:px-8">
@@ -26,8 +36,8 @@ export default function HomePage() {
             </div>
 
             <div className="ls-image-frame relative min-h-[300px] w-full overflow-hidden rounded-xl">
-              <Image
-                src={getAssetUrl(featured.artwork1)}
+              <ImageFallback
+                srcs={getHeroArtworkCandidates(featured).map(getAssetUrl)}
                 alt={featured.name}
                 fill
                 className="object-contain p-4"
@@ -55,8 +65,8 @@ export default function HomePage() {
                 Latest Hero
               </p>
               <div className="ls-image-frame relative mb-3 aspect-square w-full">
-                <Image
-                  src={getAssetUrl(latest.icon_m)}
+                <ImageFallback
+                  srcs={getHeroArtworkCandidates(latest).map(getAssetUrl)}
                   alt={latest.name}
                   fill
                   className="object-contain p-6"

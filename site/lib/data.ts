@@ -56,10 +56,11 @@ export function getHeroIconCandidates(hero: Hero): string[] {
 }
 
 export function getHeroArtworkCandidates(hero: Hero): string[] {
-  return uniqueTruthy([
-    hero.artwork1,
-    hero.artwork2,
-    hero.pic_m,
-    hero.pic_f,
-  ]);
+  return uniqueTruthy([hero.artwork1, hero.artwork2, hero.pic_m, hero.pic_f]);
+}
+
+export const SPECIAL_RARITIES = ["idol", "reform"];
+
+export function isRegularHero(hero: Hero): boolean {
+  return !SPECIAL_RARITIES.includes(hero.rarity);
 }
