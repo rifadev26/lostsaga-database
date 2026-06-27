@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HeroCard } from "@/components/HeroCard";
+import { PreviewCard } from "@/components/PreviewCard";
 import { ImageFallback } from "@/components/ImageFallback";
 import {
   getAssetUrl,
@@ -7,10 +8,21 @@ import {
   isRegularHero,
 } from "@/lib/data";
 import { heroes } from "@/lib/server/data";
-import { Flame, ArrowRight, Sparkles, GitFork } from "lucide-react";
+import { etcItems } from "@/lib/server/items";
+import { gears } from "@/lib/server/gears";
+import { medals } from "@/lib/server/medals";
+import {
+  ArrowRight,
+  GitFork,
+  Users,
+  Package,
+  Backpack,
+  Shield,
+  Wrench,
+} from "lucide-react";
 
 export const metadata = {
-  title: "Lost Saga Database — Heroes, Gears & More",
+  title: "Lost Saga Database — Heroes, Gears, Items & Medals",
 };
 
 export default function HomePage() {
@@ -36,13 +48,13 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-3 text-lg font-semibold italic text-[#22c55e]">
-              Every hero. Every gear. All in one place.
+              Every hero. Every gear. Every item. Every medal.
             </p>
 
             <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
               An open-source community project dedicated to collecting every
-              hero, gear, item, and command from Lost Saga. Built for players,
-              by players.
+              hero, gear, item, medal, and command from Lost Saga. Built for
+              players, by players.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -99,24 +111,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Latest Heroes */}
+      {/* Heroes preview */}
       <section className="mb-10">
         <div className="ls-section-header mb-4">
-          <Sparkles className="h-5 w-5" />
-          <span>Latest Heroes</span>
-        </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
-          {latestHeroes.map((hero) => (
-            <HeroCard key={hero.code} hero={hero} />
-          ))}
-        </div>
-      </section>
-
-      {/* All Heroes quick grid */}
-      <section>
-        <div className="ls-section-header mb-4">
-          <Flame className="h-5 w-5" />
-          <span>Popular Heroes</span>
+          <Users className="h-5 w-5" />
+          <span>Heroes</span>
           <Link
             href="/heroes"
             className="ml-auto text-xs font-bold text-white/80 hover:text-white hover:underline"
@@ -125,9 +124,106 @@ export default function HomePage() {
           </Link>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
-          {heroes.slice(0, 8).map((hero) => (
+          {latestHeroes.map((hero) => (
             <HeroCard key={hero.code} hero={hero} />
           ))}
+        </div>
+      </section>
+
+      {/* Items preview */}
+      <section className="mb-10">
+        <div className="ls-section-header mb-4">
+          <Package className="h-5 w-5" />
+          <span>Items</span>
+          <Link
+            href="/items"
+            className="ml-auto text-xs font-bold text-white/80 hover:text-white hover:underline"
+          >
+            View All
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+          {etcItems.slice(0, 8).map((item) => (
+            <PreviewCard
+              key={item.id}
+              href={`/items/${item.id}`}
+              name={item.name || item.shopName}
+              icon={item.icon}
+              label="View Item"
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Gears preview */}
+      <section className="mb-10">
+        <div className="ls-section-header mb-4">
+          <Backpack className="h-5 w-5" />
+          <span>Gears</span>
+          <Link
+            href="/gears"
+            className="ml-auto text-xs font-bold text-white/80 hover:text-white hover:underline"
+          >
+            View All
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+          {gears.slice(0, 8).map((gear) => (
+            <PreviewCard
+              key={gear.id}
+              href={`/gears/${gear.id}`}
+              name={gear.name}
+              icon={gear.icon}
+              label="View Gear"
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Medals preview */}
+      <section className="mb-10">
+        <div className="ls-section-header mb-4">
+          <Shield className="h-5 w-5" />
+          <span>Medals</span>
+          <Link
+            href="/medals"
+            className="ml-auto text-xs font-bold text-white/80 hover:text-white hover:underline"
+          >
+            View All
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+          {medals.slice(0, 8).map((medal) => (
+            <PreviewCard
+              key={medal.id}
+              href={`/medals/${medal.id}`}
+              name={medal.name}
+              icon={medal.icon}
+              label="View Medal"
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Tools promo */}
+      <section className="mb-10">
+        <div className="ls-section-header mb-4">
+          <Wrench className="h-5 w-5" />
+          <span>Tools</span>
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <Link
+            href="/tools/icon-browser"
+            className="group ls-card flex flex-col items-center gap-2 p-6 text-center transition-colors hover:border-primary/50 hover:bg-primary/5"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#0e1626] text-primary transition-colors group-hover:bg-primary/10">
+              <Wrench className="h-6 w-6" />
+            </div>
+            <p className="text-sm font-bold text-foreground">Icon Browser</p>
+            <p className="text-[10px] uppercase text-muted-foreground">
+              Inspect UI sprites
+            </p>
+          </Link>
         </div>
       </section>
     </>
