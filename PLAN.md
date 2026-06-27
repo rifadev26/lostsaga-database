@@ -28,6 +28,8 @@ The project provides:
 - **Outputs:**
   - `data/hero.json` — raw API hero data
   - `data/hero-local.json` — hero data with local asset paths
+  - `data/etc-items.json` — etc item data from `sp2_etcitem_info.ini.iop`
+  - `data/etc-manuals.json` — item inventory manuals from `sp2_etc_manual.ini.iop`
   - `data/ui-imageset.json` — UI texture imagesets
   - `data/ui-icons.json` — keyed icon lookup for UI sprites
   - `data/images/ui/` — extracted UI DDS/PNG assets
@@ -63,6 +65,8 @@ lostsaga-database/
 ├── data/
 │   ├── hero.json                # raw API hero data
 │   ├── hero-local.json          # hero data with local asset paths
+│   ├── etc-items.json           # etc item data
+│   ├── etc-manuals.json         # item inventory manuals
 │   ├── ui-imageset.json         # UI texture imagesets
 │   ├── ui-icons.json            # keyed icon lookup for UI sprites
 │   └── images/                  # generated image assets
@@ -71,7 +75,9 @@ lostsaga-database/
 │   ├── config.ts                # central config & .iop passwords
 │   ├── fetchers/
 │   │   ├── heroes.ts            # hero + gear image fetcher
-│   │   └── textures.ts          # UI .iop texture fetcher
+│   │   ├── textures.ts          # UI .iop texture fetcher
+│   │   ├── items.ts             # etc item data fetcher
+│   │   └── manuals.ts           # item manual fetcher
 │   ├── lib/
 │   │   ├── iop.ts               # Lost Saga .iop extractor
 │   │   ├── dds-to-png.ts        # uncompressed DDS → PNG fallback
@@ -110,6 +116,10 @@ The `scripts/index.ts` pipeline runs through the fetchers in `scripts/fetchers/`
    - `data/ui-icons.json`
    - `data/images/ui/`
    - `data/failed-ui-images.json` and `data/failed-ui-conversions.json` if anything fails.
+3. `fetchItems()` — downloads `config/sp2_etcitem_info.ini.iop`, extracts the INI, resolves UI icon references, and writes:
+   - `data/etc-items.json`
+4. `fetchManuals()` — downloads `config/sp2_etc_manual.ini.iop`, applies the secondary XOR, parses `[ManualN]` sections, and writes:
+   - `data/etc-manuals.json`
 
 ### Running the pipeline
 
@@ -120,26 +130,29 @@ pnpm run fetch-data
 
 ## Website Implementation
 
-### Phase 1 — Heroes (current)
+### Phase 1 — Heroes (complete)
 
 - [x] Scaffold `site/` with Next.js 16, Tailwind CSS 4, and shadcn/ui
-- [ ] Build `/heroes` listing page with search, type filter, and rarity filter
-- [ ] Build `/heroes/[code]` detail page
-- [ ] Apply fresh "Obsidian Cyan" dark theme design
-- [ ] Deploy to Vercel
+- [x] Build `/heroes` listing page with search, type filter, and rarity filter
+- [x] Build `/heroes/[code]` detail page
+- [x] Apply fresh "Obsidian Cyan" dark theme design
+- [x] Deploy to Vercel
 
-### Phase 2 — Gears & Items
+### Phase 2 — Items, Gears & Equipment
 
-- Gear listing page with search and filters
-- Gear detail page
-- Item listing page
+- [x] Etc item listing page (`/items`) with search, group filter, and type-code filter
+- [x] Etc item detail page (`/items/[id]`) with metadata and inventory manual
+- [ ] Gear listing page (`/gears`) with search and filters
+- [ ] Gear detail page (`/gears/[id]`)
+- [ ] Medal collection page (`/medals`)
+- [ ] Command reference page (`/commands`)
 
 ### Phase 3 — Tools
 
-- Icon browser
-- Quest generator
-- Pass generator
-- SRV ID generator
+- [x] Icon browser (`/tools/icon-browser`)
+- [ ] Quest generator
+- [ ] Pass generator
+- [ ] SRV ID generator
 
 ### Phase 4 — Community Features
 
@@ -163,7 +176,7 @@ It is intentionally different from the original `lostsaga.xyz` site.
 ### Vercel settings
 
 | Setting | Value |
-|---|---|
+|---|---|---|
 | Framework preset | Next.js |
 | Root directory | `site` |
 | Build command | `next build` |
@@ -173,9 +186,9 @@ No static export is used; Vercel handles the Next.js app natively.
 
 ### Image configuration
 
-`site/next.config.js` allows the Next.js Image component to optimize remote images from jsDelivr:
+`site/next.config.ts` allows the Next.js Image component to optimize remote images from jsDelivr:
 
-```js
+```ts
 images: {
   remotePatterns: [
     {
@@ -190,8 +203,8 @@ images: {
 
 1. Fork the repository.
 2. Create a feature or fix branch.
-3. If you change the data pipeline, run `node scripts/index.js` to regenerate data.
-4. Verify the website locally with `cd site && npm run dev`.
+3. If you change the data pipeline, run `pnpm run fetch-data` to regenerate data.
+4. Verify the website locally with `cd site && pnpm run dev`.
 5. Open a pull request.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.

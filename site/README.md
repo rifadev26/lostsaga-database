@@ -1,34 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lost Saga Database — Website
 
-## Getting Started
+The Next.js frontend for the [Lost Saga Database](https://github.com/rifadev26/lostsaga-database).
 
-First, run the development server:
+Live site: [https://lostsaga-database.vercel.app](https://lostsaga-database.vercel.app)
+
+## Tech stack
+
+- **Framework:** Next.js `16.2.9`
+- **React:** `19.x`
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS `4.3.1`
+- **Components:** shadcn/ui + Lucide React
+
+## Getting started
+
+From the **repository root**, generate the data first:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm run fetch-data
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then install and run the website:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd site
+pnpm install
+pnpm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## Build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Make sure `data/etc-items.json`, `data/etc-manuals.json`, `data/hero-local.json`, `data/ui-imageset.json`, and `data/ui-icons.json` exist in the root `data/` folder before running the site.
+- The site is configured as a Next.js app with `site` as the Vercel root directory.
