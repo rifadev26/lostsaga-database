@@ -21,13 +21,17 @@ The project provides:
 
 ### Data Pipeline
 
-- **Runtime:** Node.js 18+
+- **Runtime:** Node.js 18+ / TypeScript via `tsx`
 - **API calls:** Native `fetch()`
 - **File I/O:** `fs.promises` and Node.js streams
+- **Key libraries:** `fast-xml-parser`, `@marcuth/dds-to-png`
 - **Outputs:**
-  - `data/hero.json` — raw API data
+  - `data/hero.json` — raw API hero data
   - `data/hero-local.json` — hero data with local asset paths
-  - `Mercenary/` — hero image assets
+  - `data/ui-imageset.json` — UI texture imagesets
+  - `data/ui-icons.json` — keyed icon lookup for UI sprites
+  - `data/images/ui/` — extracted UI DDS/PNG assets
+  - `data/images/heroes/` — hero and gear image assets
 
 ### Website
 
@@ -43,8 +47,11 @@ The project provides:
 Images are served via **jsDelivr** on top of the GitHub repository:
 
 ```text
-https://cdn.jsdelivr.net/gh/rifadev26/lostsaga-database@main/Mercenary/{hero.code}/icon_m.png
+https://cdn.jsdelivr.net/gh/rifadev26/lostsaga-database@main/data/images/heroes/{hero.code}/icon_m.png
+https://cdn.jsdelivr.net/gh/rifadev26/lostsaga-database@main/data/images/ui/{uiImage.pngFile}
 ```
+
+`data/ui-imageset.json` and `data/ui-icons.json` include a ready-to-use `pngUrl` field pointing to the jsDelivr CDN.
 
 ## Repository Structure
 
@@ -52,18 +59,32 @@ https://cdn.jsdelivr.net/gh/rifadev26/lostsaga-database@main/Mercenary/{hero.cod
 lostsaga-database/
 ├── .github/
 │   └── ISSUE_TEMPLATE/          # GitHub issue templates
+│   └── workflows/               # GitHub Actions
 ├── data/
-│   ├── hero.json                # raw API data
-│   └── hero-local.json          # local asset paths
-├── Mercenary/                   # hero image assets
+│   ├── hero.json                # raw API hero data
+│   ├── hero-local.json          # hero data with local asset paths
+│   ├── ui-imageset.json         # UI texture imagesets
+│   ├── ui-icons.json            # keyed icon lookup for UI sprites
+│   └── images/                  # generated image assets
 ├── scripts/
-│   └── index.js                 # data fetching pipeline
+│   ├── index.ts                 # data fetching pipeline entrypoint
+│   ├── config.ts                # central config & .iop passwords
+│   ├── fetchers/
+│   │   ├── heroes.ts            # hero + gear image fetcher
+│   │   └── textures.ts          # UI .iop texture fetcher
+│   ├── lib/
+│   │   ├── iop.ts               # Lost Saga .iop extractor
+│   │   ├── dds-to-png.ts        # uncompressed DDS → PNG fallback
+│   │   └── ...
+│   └── debug/
+│       ├── extract-test.ts      # manual .iop extraction test
+│       └── extract-patch.ts     # manual server_patch.cfg extractor
 ├── site/                        # Next.js website
 │   ├── app/
 │   ├── components/
 │   ├── lib/
 │   ├── public/
-│   ├── next.config.js
+│   ├── next.config.ts
 │   ├── postcss.config.mjs
 │   ├── tsconfig.json
 │   └── package.json
@@ -77,17 +98,24 @@ lostsaga-database/
 
 ## Data Pipeline
 
-The `scripts/index.js` file runs three main functions:
+The `scripts/index.ts` pipeline runs through the fetchers in `scripts/fetchers/`:
 
-1. `fetchHeroes()` — fetches hero records from the Lost Saga API and writes `data/hero.json`.
-2. `downloadHeroImages()` — parses `data/hero.json`, downloads all hero and gear images into `Mercenary/`, and writes `failed-images.json` if any images fail.
-3. `changeHeroAsset()` — generates `data/hero-local.json` by replacing remote image URLs with local paths like `Mercenary/{hero.code}/icon_m.png`.
+1. `fetchAllHeroes()` — fetches hero records from the Lost Saga API, downloads hero/gear images, and writes:
+   - `data/hero.json`
+   - `data/hero-local.json`
+   - `data/images/heroes/`
+   - `data/failed-images.json` if any downloads fail.
+2. `fetchTextures()` — downloads the patch manifest, parses `uiimageset.xml`, extracts `.iop` texture archives, converts DDS sheets to PNG, and writes:
+   - `data/ui-imageset.json`
+   - `data/ui-icons.json`
+   - `data/images/ui/`
+   - `data/failed-ui-images.json` and `data/failed-ui-conversions.json` if anything fails.
 
 ### Running the pipeline
 
 ```bash
-npm install
-node scripts/index.js
+pnpm install
+pnpm run fetch-data
 ```
 
 ## Website Implementation

@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/rifadev26/lostsaga-database#readme",
   "devDependencies": {
+    "@marcuth/dds-to-png": "^0.0.4",
     "@types/node": "^22.0.0",
+    "fast-xml-parser": "^5.9.3",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   }

@@ -21,6 +21,16 @@ pnpm-debug.log*
 
 # Generated artifacts
 data/failed-images.json
+data/failed-ui-images.json
+data/failed-ui-conversions.json
+
+# Pipeline caches and generated assets
+data/.cache/
+data/images/ui/*.dds
+
+# Debug / temp files
+out.log
+tmp-*
 
 # Misc
 .DS_Store
