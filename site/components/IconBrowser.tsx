@@ -23,19 +23,15 @@ import {
   UI_IMAGESET_JSON_URL,
 } from "@/lib/ui-icons";
 
-const MAX_PREVIEW_SIZE = 120;
 const IMAGESET_PAGE_SIZE = 48;
 
 function IconSprite({ icon }: { icon: UIIcon }) {
-  const maxDim = Math.max(icon.width, icon.height);
-  const scale = maxDim > MAX_PREVIEW_SIZE ? MAX_PREVIEW_SIZE / maxDim : 1;
-
   return (
     <div
       className="ls-image-frame inline-flex overflow-hidden"
       style={{
-        width: Math.max(1, Math.round(icon.width * scale)),
-        height: Math.max(1, Math.round(icon.height * scale)),
+        width: icon.width,
+        height: icon.height,
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -50,8 +46,6 @@ function IconSprite({ icon }: { icon: UIIcon }) {
           height: icon.height,
           objectFit: "none",
           objectPosition: `${-icon.x}px ${-icon.y}px`,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
           imageRendering: "pixelated",
         }}
         className="shrink-0"
@@ -155,9 +149,7 @@ export function IconBrowser() {
         ]);
 
         if (!iconsRes.ok) {
-          throw new Error(
-            `Failed to load ui-icons.json (${iconsRes.status})`,
-          );
+          throw new Error(`Failed to load ui-icons.json (${iconsRes.status})`);
         }
         if (!imagesetRes.ok) {
           throw new Error(
@@ -242,9 +234,7 @@ export function IconBrowser() {
   const filteredIcons = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return selectedIcons;
-    return selectedIcons.filter((icon) =>
-      icon.name.toLowerCase().includes(q),
-    );
+    return selectedIcons.filter((icon) => icon.name.toLowerCase().includes(q));
   }, [selectedIcons, query]);
 
   const selectedIcon = useMemo(() => {
@@ -290,7 +280,10 @@ export function IconBrowser() {
     try {
       await navigator.clipboard.writeText(key);
       setCopiedKey(key);
-      window.setTimeout(() => setCopiedKey((prev) => (prev === key ? null : prev)), 1500);
+      window.setTimeout(
+        () => setCopiedKey((prev) => (prev === key ? null : prev)),
+        1500,
+      );
     } catch {
       // ignore
     }
@@ -348,64 +341,66 @@ export function IconBrowser() {
         ) : (
           <>
             <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
-            {paginatedImagesets.map((name) => {
-              const count = iconsByImageset[name]?.length ?? 0;
-              return (
-                <button
-                  key={name}
-                  type="button"
-                  onClick={() => selectImageset(name)}
-                  className="ls-card flex flex-col items-start gap-2 p-4 text-left transition-transform"
-                >
-                  <div className="flex w-full items-center gap-2">
-                    <LayoutGrid className="h-4 w-4 text-primary" />
-                    <span className="break-all text-sm font-bold text-foreground">
-                      {name}
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {count.toLocaleString()} icon{count !== 1 ? "s" : ""}
-                  </p>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="flex flex-col items-center gap-3 pt-2 sm:flex-row sm:justify-between">
-            <p className="text-sm text-muted-foreground">
-              Page{" "}
-              <span className="font-bold text-foreground">{imagesetPage}</span>{" "}
-              of{" "}
-              <span className="font-bold text-foreground">
-                {totalImagesetPages}
-              </span>
-            </p>
-
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setImagesetPage((p) => Math.max(1, p - 1))}
-                disabled={imagesetPage === 1 || totalImagesetPages === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  setImagesetPage((p) => Math.min(totalImagesetPages, p + 1))
-                }
-                disabled={
-                  imagesetPage === totalImagesetPages ||
-                  totalImagesetPages === 1
-                }
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+              {paginatedImagesets.map((name) => {
+                const count = iconsByImageset[name]?.length ?? 0;
+                return (
+                  <button
+                    key={name}
+                    type="button"
+                    onClick={() => selectImageset(name)}
+                    className="ls-card flex flex-col items-start gap-2 p-4 text-left transition-transform"
+                  >
+                    <div className="flex w-full items-center gap-2">
+                      <LayoutGrid className="h-4 w-4 text-primary" />
+                      <span className="break-all text-sm font-bold text-foreground">
+                        {name}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {count.toLocaleString()} icon{count !== 1 ? "s" : ""}
+                    </p>
+                  </button>
+                );
+              })}
             </div>
-          </div>
+
+            <div className="flex flex-col items-center gap-3 pt-2 sm:flex-row sm:justify-between">
+              <p className="text-sm text-muted-foreground">
+                Page{" "}
+                <span className="font-bold text-foreground">
+                  {imagesetPage}
+                </span>{" "}
+                of{" "}
+                <span className="font-bold text-foreground">
+                  {totalImagesetPages}
+                </span>
+              </p>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setImagesetPage((p) => Math.max(1, p - 1))}
+                  disabled={imagesetPage === 1 || totalImagesetPages === 1}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setImagesetPage((p) => Math.min(totalImagesetPages, p + 1))
+                  }
+                  disabled={
+                    imagesetPage === totalImagesetPages ||
+                    totalImagesetPages === 1
+                  }
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </>
         )}
       </div>
@@ -480,17 +475,25 @@ export function IconBrowser() {
               </div>
 
               {selectedIcon ? (
-                <div className="flex flex-col items-center gap-2 rounded-lg border-2 border-[var(--border)] bg-[#0b1120] p-4 sm:flex-row sm:justify-between">
+                <div className="flex flex-col items-center gap-4 rounded-lg border-2 border-[var(--border)] bg-[#0b1120] p-4 sm:flex-row sm:justify-between">
                   <div className="text-center sm:text-left">
                     <p className="break-all text-xs font-bold text-foreground">
                       <IconKey icon={selectedIcon} />
                     </p>
-                    <p className="text-[11px] text-muted-foreground">
-                      x:{selectedIcon.x} y:{selectedIcon.y} w:{" "}
-                      {selectedIcon.width} h:{selectedIcon.height}
-                    </p>
+                    <div className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-[11px]">
+                      <span className="text-muted-foreground">Position</span>
+                      <span className="tabular-nums text-foreground">
+                        {selectedIcon.x}, {selectedIcon.y}
+                      </span>
+                      <span className="text-muted-foreground">Size</span>
+                      <span className="tabular-nums text-foreground">
+                        {selectedIcon.width} × {selectedIcon.height}
+                      </span>
+                    </div>
                   </div>
-                  <IconSprite icon={selectedIcon} />
+                  <div className="max-h-[240px] max-w-full overflow-auto">
+                    <IconSprite icon={selectedIcon} />
+                  </div>
                 </div>
               ) : (
                 <p className="text-center text-sm text-muted-foreground">
