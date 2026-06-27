@@ -162,7 +162,6 @@ export default async function ItemPage({ params }: ItemPageProps) {
           <Separator className="my-4 bg-[var(--border)]" />
 
           <div className="space-y-1">
-            <Field label="Inventory Manual" value={item.inventoryManual} />
             <Field
               label="Inventory Sub Manual"
               value={item.inventorySubManual}
@@ -186,25 +185,27 @@ export default async function ItemPage({ params }: ItemPageProps) {
               <Field label="Max Soldier" value={item.maxSoldier} />
             )}
           </div>
+
+          {manual && (
+            <>
+              <Separator className="my-4 bg-[var(--border)]" />
+
+              <div className="ls-section-header mb-4">
+                <BookOpen className="h-4 w-4" />
+                <span>Inventory Manual</span>
+                <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold">
+                  #{item.inventoryManual}
+                </span>
+              </div>
+              <div className="max-h-[60vh] overflow-auto rounded-lg border-2 border-[var(--border)] bg-[#0b1120] p-4">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
+                  {manual.text}
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </section>
-
-      {manual && (
-        <section className="ls-card p-5">
-          <div className="ls-section-header mb-4">
-            <BookOpen className="h-4 w-4" />
-            <span>Inventory Manual</span>
-            <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold">
-              #{item.inventoryManual}
-            </span>
-          </div>
-          <div className="max-h-[60vh] overflow-auto rounded-lg border-2 border-[var(--border)] bg-[#0b1120] p-4">
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
-              {manual.text}
-            </p>
-          </div>
-        </section>
-      )}
     </>
   );
 }
