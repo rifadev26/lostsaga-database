@@ -4,6 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
 
+export interface SortOption {
+  value: string;
+  label: string;
+}
+
 interface HeroFiltersProps {
   search: string;
   onSearchChange: (value: string) => void;
@@ -13,6 +18,9 @@ interface HeroFiltersProps {
   rarityFilter: string;
   onRarityChange: (value: string) => void;
   availableRarities: string[];
+  sort: string;
+  sortOptions: SortOption[];
+  onSortChange: (value: string) => void;
   onClear: () => void;
 }
 
@@ -25,6 +33,9 @@ export function HeroFilters({
   rarityFilter,
   onRarityChange,
   availableRarities,
+  sort,
+  sortOptions,
+  onSortChange,
   onClear,
 }: HeroFiltersProps) {
   const hasFilters = search || typeFilter || rarityFilter;
@@ -82,6 +93,27 @@ export function HeroFilters({
             {availableRarities.map((rarity) => (
               <option key={rarity} value={rarity} className="capitalize">
                 {rarity}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor="hero-sort"
+            className="text-[10px] font-bold uppercase text-muted-foreground"
+          >
+            Sort
+          </label>
+          <select
+            id="hero-sort"
+            value={sort}
+            onChange={(e) => onSortChange(e.target.value)}
+            className="h-9 rounded-md border-2 border-[var(--border)] bg-[#0b1120] px-3 text-sm text-foreground focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:outline-none"
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
             ))}
           </select>

@@ -53,8 +53,8 @@ export default function HomePage() {
 
             <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
               An open-source community project dedicated to collecting every
-              hero, gear, item, medal, and command from Lost Saga. Built for
-              players, by players.
+              hero, gear, item, and medal from Lost Saga. Built for players,
+              by players.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">

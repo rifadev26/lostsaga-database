@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Users, Package, Backpack, Shield, Terminal, Wrench, Menu, X } from "lucide-react";
+import { Users, Package, Backpack, Shield, Wrench, Menu, X } from "lucide-react";
 
 const navItems = [
   { href: "/heroes", label: "Heroes", sub: "Database", icon: Users },
   { href: "/items", label: "Items", sub: "Compendium", icon: Package },
   { href: "/gears", label: "Gears", sub: "Equipment", icon: Backpack },
   { href: "/medals", label: "Medals", sub: "Collection", icon: Shield },
-  { href: "#", label: "Commands", sub: "Macro", icon: Terminal },
   { href: "/tools", label: "Tools", sub: "Utilities", icon: Wrench },
 ];
 

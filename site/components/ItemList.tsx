@@ -10,6 +10,15 @@ import type { EtcItem } from "@/lib/items";
 
 const PAGE_SIZE = 48;
 
+const sortOptions = [
+  { value: "id", label: "Default (ID)" },
+  { value: "name", label: "Name" },
+  { value: "type", label: "Type" },
+  { value: "group", label: "Group" },
+  { value: "sell", label: "Sell Peso" },
+  { value: "cash", label: "Cash" },
+];
+
 function ItemCard({ item }: { item: EtcItem }) {
   return (
     <Link href={`/items/${item.id}`} className="group block cursor-pointer">
@@ -69,36 +78,86 @@ function ItemCard({ item }: { item: EtcItem }) {
 interface ItemListProps {
   items: EtcItem[];
   itemGroups: number[];
+  q?: string;
+  group?: string;
+  type?: string;
+  sort?: string;
+  page?: number;
 }
 
-export function ItemList({ items, itemGroups }: ItemListProps) {
-  const [search, setSearch] = useState("");
-  const [groupFilter, setGroupFilter] = useState<string>("");
-  const [typeFilter, setTypeFilter] = useState("");
-  const [page, setPage] = useState(1);
+export function ItemList({
+  items,
+  itemGroups,
+  q = "",
+  group = "",
+  type = "",
+  sort = "id",
+  page: initialPage = 1,
+}: ItemListProps) {
+  const [search, setSearch] = useState(q);
+  const [groupFilter, setGroupFilter] = useState(group);
+  const [typeFilter, setTypeFilter] = useState(type);
+  const [sortKey, setSortKey] = useState(sort);
+  const [page, setPage] = useState(initialPage);
 
-  const hasFilters = search.trim() || groupFilter || typeFilter.trim();
+  const updateUrl = (
+    patch: Partial<{ q: string; group: string; type: string; sort: string; page: number }>
+  ) => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const next = {
+      q: search,
+      group: groupFilter,
+      type: typeFilter,
+      sort: sortKey,
+      page,
+      ...patch,
+    };
+
+    const setOrDelete = (key: string, value: string | number, defaultValue: string | number) => {
+      if (value === defaultValue || value === "" || value === undefined) {
+        params.delete(key);
+      } else {
+        params.set(key, String(value));
+      }
+    };
+
+    setOrDelete("q", next.q, "");
+    setOrDelete("group", next.group, "");
+    setOrDelete("type", next.type, "");
+    setOrDelete("sort", next.sort, "id");
+    setOrDelete("page", next.page, 1);
+
+    const qs = params.toString();
+    window.history.replaceState({}, "", `${window.location.pathname}${qs ? `?${qs}` : ""}`);
+  };
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
     setPage(1);
+    updateUrl({ q: value, page: 1 });
   };
 
   const handleGroupChange = (value: string) => {
     setGroupFilter(value);
     setPage(1);
+    updateUrl({ group: value, page: 1 });
   };
 
   const handleTypeChange = (value: string) => {
     setTypeFilter(value);
     setPage(1);
+    updateUrl({ type: value, page: 1 });
   };
 
-  const clearFilters = () => {
-    setSearch("");
-    setGroupFilter("");
-    setTypeFilter("");
-    setPage(1);
+  const handleSortChange = (value: string) => {
+    setSortKey(value);
+    updateUrl({ sort: value });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    updateUrl({ page: newPage });
   };
 
   const filteredItems = useMemo(() => {
@@ -123,15 +182,51 @@ export function ItemList({ items, itemGroups }: ItemListProps) {
     });
   }, [items, search, groupFilter, typeFilter]);
 
+  const sortedItems = useMemo(() => {
+    const list = [...filteredItems];
+    switch (sortKey) {
+      case "name":
+        list.sort((a, b) => (a.name || a.shopName).localeCompare(b.name || b.shopName));
+        break;
+      case "type":
+        list.sort((a, b) => a.type - b.type);
+        break;
+      case "group":
+        list.sort((a, b) => (a.group ?? -1) - (b.group ?? -1));
+        break;
+      case "sell":
+        list.sort((a, b) => a.sellPeso - b.sellPeso);
+        break;
+      case "cash":
+        list.sort((a, b) => (a.cash ?? -1) - (b.cash ?? -1));
+        break;
+      default:
+        list.sort((a, b) => a.id - b.id);
+    }
+    return list;
+  }, [filteredItems, sortKey]);
+
   const totalPages = useMemo(
-    () => Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE)),
-    [filteredItems.length],
+    () => Math.max(1, Math.ceil(sortedItems.length / PAGE_SIZE)),
+    [sortedItems.length]
   );
 
   const paginatedItems = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
-    return filteredItems.slice(start, start + PAGE_SIZE);
-  }, [filteredItems, page]);
+    return sortedItems.slice(start, start + PAGE_SIZE);
+  }, [sortedItems, page]);
+
+  const hasFilters =
+    search.trim() || groupFilter || typeFilter.trim() || sortKey !== "id";
+
+  const clearFilters = () => {
+    setSearch("");
+    setGroupFilter("");
+    setTypeFilter("");
+    setSortKey("id");
+    setPage(1);
+    updateUrl({ q: "", group: "", type: "", sort: "id", page: 1 });
+  };
 
   return (
     <div className="space-y-4">
@@ -183,6 +278,24 @@ export function ItemList({ items, itemGroups }: ItemListProps) {
             />
           </div>
 
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="item-sort" className="text-[10px] font-bold uppercase text-muted-foreground">
+              Sort
+            </label>
+            <select
+              id="item-sort"
+              value={sortKey}
+              onChange={(e) => handleSortChange(e.target.value)}
+              className="h-9 rounded-md border-2 border-[var(--border)] bg-[#0b1120] px-3 text-sm text-foreground focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:outline-none"
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {hasFilters && (
             <Button
               variant="outline"
@@ -203,13 +316,13 @@ export function ItemList({ items, itemGroups }: ItemListProps) {
         </span>{" "}
         of{" "}
         <span className="font-bold text-foreground">
-          {filteredItems.length.toLocaleString("en-US")}
+          {sortedItems.length.toLocaleString("en-US")}
         </span>{" "}
         items
         {hasFilters && " (filtered)"}
       </p>
 
-      {filteredItems.length === 0 ? (
+      {sortedItems.length === 0 ? (
         <div className="py-16 text-center text-sm text-muted-foreground">
           No items match your filters.
         </div>
@@ -232,7 +345,7 @@ export function ItemList({ items, itemGroups }: ItemListProps) {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => handlePageChange(Math.max(1, page - 1))}
                 disabled={page === 1 || totalPages === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -241,7 +354,7 @@ export function ItemList({ items, itemGroups }: ItemListProps) {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() => handlePageChange(Math.min(totalPages, page + 1))}
                 disabled={page === totalPages || totalPages === 1}
               >
                 <ChevronRight className="h-4 w-4" />

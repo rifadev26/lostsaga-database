@@ -7,7 +7,13 @@ export const metadata = {
   title: "Heroes — Lost Saga Database",
 };
 
-export default function HeroesPage() {
+export default async function HeroesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+
   return (
     <>
       <Breadcrumb items={[{ label: "Heroes" }]} />
@@ -24,6 +30,11 @@ export default function HeroesPage() {
         heroes={heroes}
         heroTypes={heroTypes}
         heroRarities={heroRarities}
+        q={typeof params.q === "string" ? params.q : ""}
+        type={typeof params.type === "string" ? params.type : ""}
+        rarity={typeof params.rarity === "string" ? params.rarity : ""}
+        sort={typeof params.sort === "string" ? params.sort : "code"}
+        page={typeof params.page === "string" ? Number(params.page) : 1}
       />
     </>
   );
