@@ -1,13 +1,11 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { gears, gearById } from "@/lib/server/gears";
 import { ItemIcon } from "@/components/ItemIcon";
 import { ImageFallback } from "@/components/ImageFallback";
 import { getAssetUrl } from "@/lib/data";
-import { ArrowLeft, Swords, Info } from "lucide-react";
+import { Swords, Info } from "lucide-react";
 
 interface GearPageProps {
   params: Promise<{ id: string }>;
@@ -55,15 +53,12 @@ export default async function GearPage({ params }: GearPageProps) {
 
   return (
     <>
-      <Link
-        href="/gears"
-        className={cn(
-          buttonVariants({ variant: "ghost", size: "sm" }),
-          "mb-4 inline-flex gap-2 text-muted-foreground hover:text-foreground",
-        )}
-      >
-        <ArrowLeft className="h-4 w-4" /> Back to Gears
-      </Link>
+      <Breadcrumb
+        items={[
+          { label: "Gears", href: "/gears" },
+          { label: gear.name },
+        ]}
+      />
 
       <div className="ls-section-header mb-4">
         <Swords className="h-5 w-5" />

@@ -1,4 +1,5 @@
 import { GearList } from "@/components/GearList";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { gears, gearTypes, gearRarities } from "@/lib/server/gears";
 import { Swords } from "lucide-react";
 
@@ -11,6 +12,8 @@ export const metadata = {
 export default function GearsPage() {
   return (
     <>
+      <Breadcrumb items={[{ label: "Gears" }]} />
+
       <div className="ls-section-header mb-4">
         <Swords className="h-5 w-5" />
         <span>Gear Database</span>

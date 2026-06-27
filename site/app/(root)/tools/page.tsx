@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import {
   LayoutGrid,
   Wrench,
@@ -100,6 +101,8 @@ function ToolCard({ tool }: { tool: Tool }) {
 export default function ToolsPage() {
   return (
     <>
+      <Breadcrumb items={[{ label: "Tools" }]} />
+
       <div className="ls-section-header mb-6">
         <Wrench className="h-5 w-5" />
         <span>Tools</span>

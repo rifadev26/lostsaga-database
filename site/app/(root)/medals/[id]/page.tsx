@@ -1,11 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { medals, medalById } from "@/lib/server/medals";
 import { ItemIcon } from "@/components/ItemIcon";
-import { ArrowLeft, Shield, Info, BookOpen, Award } from "lucide-react";
+import { Shield, Info, BookOpen, Award } from "lucide-react";
 
 interface MedalPageProps {
   params: Promise<{ id: string }>;
@@ -70,15 +68,12 @@ export default async function MedalPage({ params }: MedalPageProps) {
 
   return (
     <>
-      <Link
-        href="/medals"
-        className={cn(
-          buttonVariants({ variant: "ghost", size: "sm" }),
-          "mb-4 inline-flex gap-2 text-muted-foreground hover:text-foreground",
-        )}
-      >
-        <ArrowLeft className="h-4 w-4" /> Back to Medals
-      </Link>
+      <Breadcrumb
+        items={[
+          { label: "Medals", href: "/medals" },
+          { label: medal.name },
+        ]}
+      />
 
       <div className="ls-section-header mb-4">
         <Shield className="h-5 w-5" />

@@ -1,4 +1,5 @@
 import { MedalList } from "@/components/MedalList";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { medals, medalSubTypes } from "@/lib/server/medals";
 import { Shield } from "lucide-react";
 
@@ -11,6 +12,8 @@ export const metadata = {
 export default function MedalsPage() {
   return (
     <>
+      <Breadcrumb items={[{ label: "Medals" }]} />
+
       <div className="ls-section-header mb-4">
         <Shield className="h-5 w-5" />
         <span>Medal Database</span>

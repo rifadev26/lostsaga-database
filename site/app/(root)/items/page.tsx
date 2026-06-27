@@ -1,4 +1,5 @@
 import { ItemList } from "@/components/ItemList";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { etcItems, itemGroups } from "@/lib/server/items";
 import { Package } from "lucide-react";
 
@@ -11,6 +12,8 @@ export const metadata = {
 export default function ItemsPage() {
   return (
     <>
+      <Breadcrumb items={[{ label: "Items" }]} />
+
       <div className="ls-section-header mb-4">
         <Package className="h-5 w-5" />
         <span>Etc Item Database</span>

@@ -1,4 +1,5 @@
 import { HeroList } from "@/components/HeroList";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { heroes, heroRarities, heroTypes } from "@/lib/server/data";
 import { Users } from "lucide-react";
 
@@ -9,6 +10,8 @@ export const metadata = {
 export default function HeroesPage() {
   return (
     <>
+      <Breadcrumb items={[{ label: "Heroes" }]} />
+
       <div className="ls-section-header mb-4">
         <Users className="h-5 w-5" />
         <span>Hero Database</span>

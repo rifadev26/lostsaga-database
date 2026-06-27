@@ -1,13 +1,11 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { Gear, Hero, getAssetUrl } from "@/lib/data";
 import { heroes, heroByCode } from "@/lib/server/data";
 import { ImageFallback } from "@/components/ImageFallback";
 import { HeroImageGallery } from "@/components/HeroImageGallery";
-import { ArrowLeft, Swords, Shield } from "lucide-react";
+import { Swords, Shield } from "lucide-react";
 
 interface HeroPageProps {
   params: Promise<{ code: string }>;
@@ -82,15 +80,12 @@ export default async function HeroPage({ params }: HeroPageProps) {
 
   return (
     <>
-      <Link
-        href="/heroes"
-        className={cn(
-          buttonVariants({ variant: "ghost", size: "sm" }),
-          "mb-4 inline-flex gap-2 text-muted-foreground hover:text-foreground"
-        )}
-      >
-        <ArrowLeft className="h-4 w-4" /> Back to Heroes
-      </Link>
+      <Breadcrumb
+        items={[
+          { label: "Heroes", href: "/heroes" },
+          { label: hero.name },
+        ]}
+      />
 
       <div className="ls-section-header mb-4">
         <Swords className="h-5 w-5" />

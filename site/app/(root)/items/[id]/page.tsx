@@ -1,11 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { etcItems, itemById, manualById } from "@/lib/server/items";
 import { ItemIcon } from "@/components/ItemIcon";
-import { ArrowLeft, Package, Info, BookOpen } from "lucide-react";
+import { Package, Info, BookOpen } from "lucide-react";
 
 interface ItemPageProps {
   params: Promise<{ id: string }>;
@@ -65,15 +63,12 @@ export default async function ItemPage({ params }: ItemPageProps) {
 
   return (
     <>
-      <Link
-        href="/items"
-        className={cn(
-          buttonVariants({ variant: "ghost", size: "sm" }),
-          "mb-4 inline-flex gap-2 text-muted-foreground hover:text-foreground",
-        )}
-      >
-        <ArrowLeft className="h-4 w-4" /> Back to Items
-      </Link>
+      <Breadcrumb
+        items={[
+          { label: "Items", href: "/items" },
+          { label: item.name || item.shopName },
+        ]}
+      />
 
       <div className="ls-section-header mb-4">
         <Package className="h-5 w-5" />
