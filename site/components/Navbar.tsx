@@ -8,7 +8,7 @@ const navItems = [
   { href: "/heroes", label: "Heroes", sub: "Database", icon: Users },
   { href: "/items", label: "Items", sub: "Compendium", icon: Package },
   { href: "/gears", label: "Gears", sub: "Equipment", icon: Backpack },
-  { href: "#", label: "Medals", sub: "Collection", icon: Shield },
+  { href: "/medals", label: "Medals", sub: "Collection", icon: Shield },
   { href: "#", label: "Commands", sub: "Macro", icon: Terminal },
   { href: "/tools", label: "Tools", sub: "Utilities", icon: Wrench },
 ];

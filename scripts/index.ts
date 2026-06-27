@@ -3,6 +3,7 @@ import { fetchTextures } from "./fetchers/textures";
 import { fetchItems } from "./fetchers/items";
 import { fetchManuals } from "./fetchers/manuals";
 import { fetchGears } from "./fetchers/gears";
+import { fetchMedals } from "./fetchers/medals";
 
 async function main(): Promise<void> {
   await fetchAllHeroes();
@@ -10,6 +11,7 @@ async function main(): Promise<void> {
   await fetchItems();
   await fetchManuals();
   await fetchGears();
+  await fetchMedals();
 }
 
 main().catch((err) => {
