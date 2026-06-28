@@ -1,7 +1,12 @@
 import { notFound } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { Gear, Hero, getAssetUrl } from "@/lib/data";
+import {
+  Gear,
+  Hero,
+  getAssetUrl,
+  getHeroArtworkCandidates,
+} from "@/lib/data";
 import { heroes, heroByCode } from "@/lib/server/data";
 import { ImageFallback } from "@/components/ImageFallback";
 import { HeroImageGallery } from "@/components/HeroImageGallery";
@@ -19,9 +24,23 @@ export async function generateMetadata({ params }: HeroPageProps) {
   const { code } = await params;
   const hero = heroByCode.get(code);
   if (!hero) return { title: "Hero Not Found" };
+
+  const image = getHeroArtworkCandidates(hero)
+    .map(getAssetUrl)
+    .find(Boolean);
+
   return {
-    title: `${hero.name} — Lost Saga Database`,
+    title: hero.name,
     description: hero.summary,
+    openGraph: {
+      title: hero.name,
+      description: hero.summary,
+      images: image ? [{ url: image, alt: hero.name }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: image ? [image] : [],
+    },
   };
 }
 

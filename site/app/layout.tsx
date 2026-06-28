@@ -11,9 +11,20 @@ const exo2 = Exo_2({
   display: "swap",
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.lsdevhub.com";
+
 export const metadata: Metadata = {
-  title: "Lost Saga Database",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Lost Saga Database",
+    template: "%s — Lost Saga Database",
+  },
   description: "Open-source Lost Saga heroes, gears, items, and assets.",
+  openGraph: {
+    type: "website",
+    siteName: "Lost Saga Database",
+  },
 };
 
 export default function RootLayout({

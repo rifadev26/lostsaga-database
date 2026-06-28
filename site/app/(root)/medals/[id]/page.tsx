@@ -17,8 +17,19 @@ export async function generateMetadata({ params }: MedalPageProps) {
   const { id } = await params;
   const medal = medalById.get(Number(id));
   if (!medal) return { title: "Medal Not Found" };
+
+  const image = medal.icon?.pngUrl;
+
   return {
-    title: `${medal.name} — Lost Saga Database`,
+    title: medal.name,
+    openGraph: {
+      title: medal.name,
+      images: image ? [{ url: image, alt: medal.name }] : [],
+    },
+    twitter: {
+      card: "summary",
+      images: image ? [image] : [],
+    },
   };
 }
 

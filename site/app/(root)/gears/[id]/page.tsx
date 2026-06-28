@@ -19,8 +19,19 @@ export async function generateMetadata({ params }: GearPageProps) {
   const { id } = await params;
   const gear = gearById.get(Number(id));
   if (!gear) return { title: "Gear Not Found" };
+
+  const image = gear.icon?.pngUrl;
+
   return {
-    title: `${gear.name} — Lost Saga Database`,
+    title: gear.name,
+    openGraph: {
+      title: gear.name,
+      images: image ? [{ url: image, alt: gear.name }] : [],
+    },
+    twitter: {
+      card: "summary",
+      images: image ? [image] : [],
+    },
   };
 }
 

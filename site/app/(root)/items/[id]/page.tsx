@@ -17,8 +17,20 @@ export async function generateMetadata({ params }: ItemPageProps) {
   const { id } = await params;
   const item = itemById.get(Number(id));
   if (!item) return { title: "Item Not Found" };
+
+  const name = item.name || item.shopName;
+  const image = item.icon?.pngUrl;
+
   return {
-    title: `${item.name || item.shopName} — Lost Saga Database`,
+    title: name,
+    openGraph: {
+      title: name,
+      images: image ? [{ url: image, alt: name }] : [],
+    },
+    twitter: {
+      card: "summary",
+      images: image ? [image] : [],
+    },
   };
 }
 
