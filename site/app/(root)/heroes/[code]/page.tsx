@@ -3,7 +3,6 @@ import { Separator } from "@/components/ui/separator";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import {
   Gear,
-  Hero,
   getAssetUrl,
   getHeroArtworkCandidates,
 } from "@/lib/data";

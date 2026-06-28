@@ -72,11 +72,11 @@ const allTools: Tool[] = [
     category: "Asset Conversion",
   },
   {
-    href: "#",
+    href: "/tools/quest-generator",
     label: "Quest Generator",
     description: "Create custom quests for Lost Saga.",
     icon: Scroll,
-    available: false,
+    available: true,
     category: "Creation Tools",
   },
   {

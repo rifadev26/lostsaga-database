@@ -273,7 +273,7 @@ export function SearchPanel({
 
       {query.trim() && totalCount === 0 && (
         <div className="py-16 text-center text-sm text-muted-foreground">
-          No results found for "<span className="text-foreground">{query}</span>".
+          No results found for &quot;<span className="text-foreground">{query}</span>&quot;.
         </div>
       )}
 

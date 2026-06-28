@@ -5,6 +5,7 @@ import { fetchManuals } from "./fetchers/manuals";
 import { fetchGears } from "./fetchers/gears";
 import { fetchMedals } from "./fetchers/medals";
 import { fetchPets } from "./fetchers/pets";
+import { fetchQuests } from "./fetchers/quests";
 
 async function main(): Promise<void> {
   await fetchAllHeroes();
@@ -14,6 +15,7 @@ async function main(): Promise<void> {
   await fetchGears();
   await fetchMedals();
   await fetchPets();
+  await fetchQuests();
 }
 
 main().catch((err) => {

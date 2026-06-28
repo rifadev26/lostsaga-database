@@ -11,10 +11,6 @@ import {
 import { ImageFallback } from "./ImageFallback";
 
 export function HeroImageGallery({ hero }: { hero: Hero }) {
-  const iconSrcs = useMemo(
-    () => getHeroIconCandidates(hero).map(getAssetUrl),
-    [hero]
-  );
   const allHeroSrcs = useMemo(() => {
     const paths = [
       ...getHeroArtworkCandidates(hero),

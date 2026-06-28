@@ -1,6 +1,6 @@
 import type { ItemIcon } from "./items";
 
-export interface PetIcon extends ItemIcon {}
+export type PetIcon = ItemIcon;
 
 export interface PetView {
   rank: number;

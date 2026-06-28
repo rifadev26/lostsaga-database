@@ -29,8 +29,20 @@ The project provides:
   - `data/hero.json` — raw API hero data
   - `data/hero-local.json` — hero data with local asset paths
   - `data/etc-items.json` — etc item data from `sp2_etcitem_info.ini.iop`
+  - `data/etc-items-raw.json` — raw etc item sections
   - `data/etc-manuals.json` — item inventory manuals from `sp2_etc_manual.ini.iop`
   - `data/gears.json` — gear data from `config/mercenary/{code}/{code}_item.ini.iop`
+  - `data/medals-raw.json` — raw medal item sections
+  - `data/medals.json` — typed medal data
+  - `data/pets-raw.json` — raw pet info sections
+  - `data/pets.json` — typed pet data
+  - `data/pet-feed-info.json` — pet feed rank data
+  - `data/pet-manuals.json` — pet inventory manuals
+  - `data/quests-raw.json` — raw quest info sections
+  - `data/quests.json` — typed quest data
+  - `data/quest-help-raw.json` — raw quest help sections
+  - `data/quest-present-raw.json` — raw quest present sections
+  - `data/quest-guide-raw.json` — raw quest guide sections
   - `data/ui-imageset.json` — UI texture imagesets
   - `data/ui-icons.json` — keyed icon lookup for UI sprites
   - `data/images/ui/` — extracted UI DDS/PNG assets
@@ -67,8 +79,20 @@ lostsaga-database/
 │   ├── hero.json                # raw API hero data
 │   ├── hero-local.json          # hero data with local asset paths
 │   ├── etc-items.json           # etc item data
+│   ├── etc-items-raw.json       # raw etc item sections
 │   ├── etc-manuals.json         # item inventory manuals
 │   ├── gears.json               # gear data
+│   ├── medals-raw.json          # raw medal item sections
+│   ├── medals.json              # typed medal data
+│   ├── pets-raw.json            # raw pet info sections
+│   ├── pets.json                # typed pet data
+│   ├── pet-feed-info.json       # pet feed rank data
+│   ├── pet-manuals.json         # pet inventory manuals
+│   ├── quests-raw.json          # raw quest info sections
+│   ├── quests.json              # typed quest data
+│   ├── quest-help-raw.json      # raw quest help sections
+│   ├── quest-present-raw.json   # raw quest present sections
+│   ├── quest-guide-raw.json     # raw quest guide sections
 │   ├── ui-imageset.json         # UI texture imagesets
 │   ├── ui-icons.json            # keyed icon lookup for UI sprites
 │   └── images/                  # generated image assets
@@ -80,7 +104,10 @@ lostsaga-database/
 │   │   ├── textures.ts          # UI .iop texture fetcher
 │   │   ├── items.ts             # etc item data fetcher
 │   │   ├── manuals.ts           # item manual fetcher
-│   │   └── gears.ts             # gear data fetcher
+│   │   ├── gears.ts             # gear data fetcher
+│   │   ├── medals.ts            # medal data fetcher
+│   │   ├── pets.ts              # pet data fetcher
+│   │   └── quests.ts            # quest data fetcher
 │   ├── lib/
 │   │   ├── iop.ts               # Lost Saga .iop extractor
 │   │   ├── dds-to-png.ts        # uncompressed DDS → PNG fallback
@@ -125,6 +152,20 @@ The `scripts/index.ts` pipeline runs through the fetchers in `scripts/fetchers/`
    - `data/etc-manuals.json`
 5. `fetchGears()` — downloads `config/mercenary/{code}/{code}_item.ini.iop` and `{code}_extraitem.ini.iop` for every hero, applies the secondary XOR, parses `[itemN]` sections, merges default gear with `hero-local.json`, and writes:
    - `data/gears.json`
+6. `fetchMedals()` — downloads `config/sp2_medalitem_info.ini.iop` and `config/sp2_medal_inven_manual.ini.iop`, applies the secondary XOR, parses medal data and manual text, and writes:
+   - `data/medals-raw.json`
+   - `data/medals.json`
+7. `fetchPets()` — downloads `config/sp2_pet_info.ini.iop`, `config/sp2_pet_eat_info.ini.iop`, and `config/sp2_pet_inven_manual.ini.iop`, applies the secondary XOR, parses pet data, feed ranks, and manuals, and writes:
+   - `data/pets-raw.json`
+   - `data/pets.json`
+   - `data/pet-feed-info.json`
+   - `data/pet-manuals.json`
+8. `fetchQuests()` — downloads `config/sp2_quest_info.ini.iop`, `config/sp2_quest_help.ini.iop`, `config/sp2_quest_present.ini.iop`, and `config/sp2_quest_guide.ini.iop`, applies the secondary XOR, parses quest data and related sections, and writes:
+   - `data/quests-raw.json`
+   - `data/quests.json`
+   - `data/quest-help-raw.json`
+   - `data/quest-present-raw.json`
+   - `data/quest-guide-raw.json`
 
 ### Running the pipeline
 
@@ -159,9 +200,9 @@ pnpm run fetch-data
 ### Phase 3 — Tools
 
 - [x] Icon browser (`/tools/icon-browser`)
-- [ ] Quest generator
-- [ ] Pass generator
-- [ ] SRV ID generator
+- [x] Quest generator (`/tools/quest-generator`)
+- [ ] Pass generator (`/tools/pass-generator`)
+- [ ] SRV ID generator (`/tools/srv-id-generator`)
 
 ### Phase 4 — Community Features
 
