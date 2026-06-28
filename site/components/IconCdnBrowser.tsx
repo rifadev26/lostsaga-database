@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import type { IconCdnEntry } from "@/lib/ui-icons";
 
-const PAGE_SIZE = 96;
+const PAGE_SIZE = 36;
 
 function ErrorState({ message }: { message: string }) {
   return (
@@ -59,10 +59,7 @@ export function IconCdnBrowser({
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   const iconsByKey = useMemo(() => buildIconMap(initialData), [initialData]);
-  const allKeys = useMemo(
-    () => sortedIconKeys(initialData),
-    [initialData],
-  );
+  const allKeys = useMemo(() => sortedIconKeys(initialData), [initialData]);
 
   const filteredKeys = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -81,7 +78,7 @@ export function IconCdnBrowser({
   }, [filteredKeys, page]);
 
   const selectedIcon = selectedKey
-    ? iconsByKey.get(selectedKey) ?? null
+    ? (iconsByKey.get(selectedKey) ?? null)
     : null;
 
   const handleQueryChange = (value: string) => {
@@ -246,7 +243,7 @@ export function IconCdnBrowser({
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(64px,1fr))] gap-2">
+          <div className="grid grid-cols-9 gap-2">
             {paginatedKeys.map((key) => {
               const icon = iconsByKey.get(key);
               if (!icon) return null;
@@ -258,9 +255,7 @@ export function IconCdnBrowser({
                   type="button"
                   onClick={() => setSelectedKey(key)}
                   className={`group relative flex aspect-square items-center justify-center rounded border-2 bg-[#0b1120] p-1 transition-colors hover:border-primary/50 ${
-                    isSelected
-                      ? "border-primary"
-                      : "border-[var(--border)]"
+                    isSelected ? "border-primary" : "border-[var(--border)]"
                   }`}
                   title={key}
                 >
@@ -281,8 +276,7 @@ export function IconCdnBrowser({
 
           <div className="flex flex-col items-center gap-3 pt-2 sm:flex-row sm:justify-between">
             <p className="text-sm text-muted-foreground">
-              Page{" "}
-              <span className="font-bold text-foreground">{page}</span> of{" "}
+              Page <span className="font-bold text-foreground">{page}</span> of{" "}
               <span className="font-bold text-foreground">{totalPages}</span>
             </p>
 
