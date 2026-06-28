@@ -218,31 +218,46 @@ function DateTimeField({
   return (
     <Field label={label} htmlFor={id}>
       <div className="grid grid-cols-4 gap-2">
-        <NumberInput
-          id={id ? `${id}-year` : undefined}
-          value={date.year}
-          onChange={(year) => onChange({ ...date, year })}
-          placeholder="YYYY"
-        />
-        <SelectField
-          value={date.month}
-          onChange={(month) => onChange({ ...date, month })}
-          options={MONTH_OPTIONS}
-        />
-        <NumberInput
-          value={date.date}
-          onChange={(dateVal) => onChange({ ...date, date: dateVal })}
-          min={1}
-          max={31}
-          placeholder="DD"
-        />
-        <NumberInput
-          value={date.hour}
-          onChange={(hour) => onChange({ ...date, hour })}
-          min={0}
-          max={23}
-          placeholder="HH"
-        />
+        <div className="space-y-1">
+          <NumberInput
+            id={id ? `${id}-year` : undefined}
+            value={date.year}
+            onChange={(year) => onChange({ ...date, year })}
+            placeholder="YYYY"
+          />
+          <span className="block text-[10px] text-muted-foreground">Year</span>
+        </div>
+        <div className="space-y-1">
+          <SelectField
+            id={id ? `${id}-month` : undefined}
+            value={date.month}
+            onChange={(month) => onChange({ ...date, month })}
+            options={MONTH_OPTIONS}
+          />
+          <span className="block text-[10px] text-muted-foreground">Month</span>
+        </div>
+        <div className="space-y-1">
+          <NumberInput
+            id={id ? `${id}-day` : undefined}
+            value={date.date}
+            onChange={(dateVal) => onChange({ ...date, date: dateVal })}
+            min={1}
+            max={31}
+            placeholder="DD"
+          />
+          <span className="block text-[10px] text-muted-foreground">Day</span>
+        </div>
+        <div className="space-y-1">
+          <NumberInput
+            id={id ? `${id}-hour` : undefined}
+            value={date.hour}
+            onChange={(hour) => onChange({ ...date, hour })}
+            min={0}
+            max={23}
+            placeholder="HH"
+          />
+          <span className="block text-[10px] text-muted-foreground">Hour</span>
+        </div>
       </div>
     </Field>
   );
