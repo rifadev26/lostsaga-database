@@ -58,7 +58,7 @@ export function HeroCard({ hero }: HeroCardProps) {
         </div>
 
         <div className="flex items-center justify-center border-t-2 border-black/5 bg-[#0c1322] px-3 py-2">
-          <span className="ls-btn-blue h-8 w-full text-xs">Details</span>
+          <span className="ls-btn-green h-8 w-full text-xs">View Detail</span>
         </div>
       </div>
     </Link>

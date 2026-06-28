@@ -40,7 +40,7 @@ export default function HomePage() {
   const latest =
     regularHeroes[regularHeroes.length - 1] ??
     sortedHeroes[sortedHeroes.length - 1];
-  const latestHeroes = regularHeroes.slice(-8).reverse();
+  const latestHeroes = regularHeroes.slice(-6).reverse();
 
   return (
     <>
@@ -129,7 +129,7 @@ export default function HomePage() {
             View All
           </Link>
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
           {latestHeroes.map((hero) => (
             <HeroCard key={hero.code} hero={hero} />
           ))}
