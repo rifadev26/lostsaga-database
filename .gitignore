@@ -23,10 +23,12 @@ pnpm-debug.log*
 data/failed-images.json
 data/failed-ui-images.json
 data/failed-ui-conversions.json
+data/failed-icon-cdn.json
 
 # Pipeline caches and generated assets
 data/.cache/
 data/images/ui/*.dds
+data/images/ui/*.bmp
 
 # Debug / temp files
 out.log

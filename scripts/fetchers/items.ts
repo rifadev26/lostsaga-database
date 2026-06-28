@@ -12,6 +12,7 @@ import { readJson, writeJson } from "../lib/utils";
 
 const ITEM_INI_IOP = "config/sp2_etcitem_info.ini.iop";
 const ITEM_INI_NAME = "sp2_etcitem_info.ini";
+const ICON_CDN_JSON = path.join("data", "icon-cdn.json");
 
 export interface RawItemSection {
   section: string;
@@ -20,6 +21,7 @@ export interface RawItemSection {
 }
 
 export interface ItemIcon {
+  id: number;
   imageset: string;
   name: string;
   pngUrl: string;
@@ -27,6 +29,23 @@ export interface ItemIcon {
   y: number;
   width: number;
   height: number;
+}
+
+interface CdnIcon {
+  id: number;
+  imageset: string;
+  name: string;
+  iconPngUrl: string;
+  width: number;
+  height: number;
+}
+
+function buildCdnIconMap(icons: CdnIcon[]): Record<string, CdnIcon> {
+  const map: Record<string, CdnIcon> = {};
+  for (const icon of icons) {
+    map[`${icon.imageset}#${icon.name}`] = icon;
+  }
+  return map;
 }
 
 export interface EtcItem {
@@ -115,7 +134,7 @@ function parseItemId(section: string): number | null {
 
 function transformToEtcItems(
   sections: RawItemSection[],
-  icons: Record<string, ItemIcon>,
+  icons: Record<string, CdnIcon>,
 ): EtcItem[] {
   return sections
     .map((section): EtcItem | null => {
@@ -124,7 +143,19 @@ function transformToEtcItems(
 
       const f = section.fields;
       const iconKey = f.icon_name;
-      const icon = iconKey ? icons[iconKey] ?? null : null;
+      const cdnIcon = iconKey ? icons[iconKey] ?? null : null;
+      const icon: ItemIcon | null = cdnIcon
+        ? {
+            id: cdnIcon.id,
+            imageset: cdnIcon.imageset,
+            name: cdnIcon.name,
+            pngUrl: cdnIcon.iconPngUrl,
+            x: 0,
+            y: 0,
+            width: cdnIcon.width,
+            height: cdnIcon.height,
+          }
+        : null;
 
       const normalizeNumber = (value: string | undefined): number | undefined => {
         if (value === undefined || value === "") return undefined;
@@ -189,10 +220,8 @@ export async function fetchItems(): Promise<void> {
     `Wrote ${sections.length} raw sections to data/etc-items-raw.json`,
   );
 
-  console.log("Resolving item icons...");
-  const icons = await readJson<Record<string, ItemIcon>>(
-    path.join("data", "ui-icons.json"),
-  );
+  console.log("Resolving item icons from icon-cdn.json...");
+  const icons = buildCdnIconMap(await readJson<CdnIcon[]>(ICON_CDN_JSON));
   const items = transformToEtcItems(sections, icons);
   await writeJson(path.join("data", "etc-items.json"), items);
   console.log(`Wrote ${items.length} typed items to data/etc-items.json`);

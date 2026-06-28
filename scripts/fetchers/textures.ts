@@ -5,25 +5,22 @@ import { XMLParser } from "fast-xml-parser";
 import { convertDdsToPng } from "@marcuth/dds-to-png";
 import { extractIop } from "../lib/iop";
 import { convertUncompressedDdsToPng } from "../lib/dds-to-png";
+import { convertBmpToPng } from "../lib/bmp-to-png";
 import { runWithConcurrency } from "../lib/queue";
+import type { GameSource } from "../lib/source";
+import { getSource } from "../lib/source";
+import { exists, writeJson } from "../lib/utils";
 import {
   CACHE_DIR,
   IOP_CACHE_DIR,
-  PATCH_BASE,
   PatchEntry,
-  downloadAndExtractManifest,
-  fetchBuffer,
-  readCachedOrDownload,
 } from "../lib/patch-manifest";
-import { exists, writeJson } from "../lib/utils";
 
 const DATA_DIR = path.resolve("data");
 const IMAGE_OUTPUT_DIR = path.join(DATA_DIR, "images", "ui");
 const IMAGE_OUTPUT_DIR_REL = "data/images/ui";
 const CDN_BASE =
   "https://cdn.jsdelivr.net/gh/rifadev26/lostsaga-database@main/data/images/ui";
-
-const XML_IMAGESET_IOP = `${PATCH_BASE}/xml/uiimageset.xml.iop`;
 
 interface RawImage {
   Name: string;
@@ -42,6 +39,7 @@ interface RawImageset {
 }
 
 export interface UiImage {
+  id: number;
   imageset: string;
   name: string;
   ddsFile: string;
@@ -98,22 +96,31 @@ function findTextureIopPath(
   return undefined;
 }
 
-async function extractDdsOrAsset(
+async function resolveTextureFile(
   fileName: string,
+  source: GameSource,
   manifest: Map<string, PatchEntry>,
 ): Promise<{ ok: boolean; error?: string }> {
-  const remotePath = findTextureIopPath(fileName, manifest);
-  if (!remotePath) {
-    return { ok: false, error: "Not found in manifest" };
-  }
-
   const destPath = path.join(IMAGE_OUTPUT_DIR, fileName);
   if (await exists(destPath)) {
     return { ok: true };
   }
 
+  // Prefer an already-extracted local texture file.
+  const localData = await source.resolveTextureFile(fileName);
+  if (localData) {
+    await fsp.writeFile(destPath, localData);
+    return { ok: true };
+  }
+
+  // Fall back to the patch manifest + .iop extraction.
+  const remotePath = findTextureIopPath(fileName, manifest);
+  if (!remotePath) {
+    return { ok: false, error: "Not found in manifest" };
+  }
+
   try {
-    const iopBuffer = await readCachedOrDownload(remotePath);
+    const iopBuffer = await source.readIop(remotePath);
     const data = await extractFileFromIop(iopBuffer, fileName);
     if (data.length === 0) {
       return { ok: false, error: "Extracted file is empty" };
@@ -128,32 +135,43 @@ async function extractDdsOrAsset(
 
 async function convertToPngIfNeeded(fileName: string): Promise<boolean> {
   const ext = path.extname(fileName).toLowerCase();
-  if (ext !== ".dds") return true;
+  if (ext !== ".dds" && ext !== ".bmp") return true;
 
-  const ddsPath = path.join(IMAGE_OUTPUT_DIR, fileName);
+  const sourcePath = path.join(IMAGE_OUTPUT_DIR, fileName);
   const pngFile = `${path.basename(fileName, ext)}.png`;
   const pngPath = path.join(IMAGE_OUTPUT_DIR, pngFile);
 
   if (await exists(pngPath)) return true;
 
   try {
-    const stat = await fsp.stat(ddsPath);
+    const stat = await fsp.stat(sourcePath);
     if (stat.size === 0) {
-      console.error(`Skipping empty DDS file: ${fileName}`);
+      console.error(`Skipping empty file: ${fileName}`);
       return false;
     }
   } catch {
     return false;
   }
 
+  if (ext === ".bmp") {
+    try {
+      await convertBmpToPng(sourcePath, pngPath);
+      return true;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`Failed to convert ${fileName} to PNG: ${message}`);
+      return false;
+    }
+  }
+
   try {
-    await convertDdsToPng(ddsPath, pngPath);
+    await convertDdsToPng(sourcePath, pngPath);
     return true;
   } catch (marcuthErr) {
     // @marcuth/dds-to-png only supports DXT/ATI2. Fall back to a manual
     // encoder for uncompressed BGRA/RGBA DDS files used by many UI sheets.
     try {
-      await convertUncompressedDdsToPng(ddsPath, pngPath);
+      await convertUncompressedDdsToPng(sourcePath, pngPath);
       return true;
     } catch (fallbackErr) {
       const primary =
@@ -168,21 +186,33 @@ async function convertToPngIfNeeded(fileName: string): Promise<boolean> {
   }
 }
 
-async function fetchAndParseUiImageset(): Promise<{
+async function fetchAndParseUiImageset(
+  source: GameSource,
+): Promise<{
   imagesets: UiImageset[];
-  icons: Record<string, UiImage>;
+  icons: UiImage[];
   uniqueFiles: string[];
 }> {
-  console.log("Downloading uiimageset.xml.iop");
-  const iopBuffer = await readCachedOrDownload("xml/uiimageset.xml.iop");
-  const entries = await extractIop(iopBuffer);
-  const xmlEntry = entries.find((e) => e.filename.endsWith("uiimageset.xml"));
-  if (!xmlEntry) {
-    throw new Error("uiimageset.xml not found inside .iop archive");
-  }
+  // Prefer an already-extracted local uiimageset.xml.
+  const localXml = await source.readAsset("xml/uiimageset.xml");
+  let xmlText: string;
 
-  const xmlText = new TextDecoder("euc-kr").decode(xmlEntry.data);
-  await fsp.writeFile(path.join(CACHE_DIR, "uiimageset.xml"), xmlText);
+  if (localXml) {
+    xmlText = new TextDecoder("euc-kr").decode(localXml);
+    await fsp.writeFile(path.join(CACHE_DIR, "uiimageset.xml"), xmlText);
+    console.log("Using local xml/uiimageset.xml");
+  } else {
+    console.log("Downloading uiimageset.xml.iop");
+    const iopBuffer = await source.readIop("xml/uiimageset.xml.iop");
+    const entries = await extractIop(iopBuffer);
+    const xmlEntry = entries.find((e) => e.filename.endsWith("uiimageset.xml"));
+    if (!xmlEntry) {
+      throw new Error("uiimageset.xml not found inside .iop archive");
+    }
+
+    xmlText = new TextDecoder("euc-kr").decode(xmlEntry.data);
+    await fsp.writeFile(path.join(CACHE_DIR, "uiimageset.xml"), xmlText);
+  }
 
   const parser = new XMLParser({
     ignoreAttributes: false,
@@ -197,7 +227,7 @@ async function fetchAndParseUiImageset(): Promise<{
 
   const rawSets = parsed.ImagesetLayout?.Imageset;
   const imagesets: UiImageset[] = [];
-  const icons: Record<string, UiImage> = {};
+  const icons: UiImage[] = [];
   const uniqueFiles = new Set<string>();
 
   const list = Array.isArray(rawSets) ? rawSets : rawSets ? [rawSets] : [];
@@ -208,9 +238,14 @@ async function fetchAndParseUiImageset(): Promise<{
     const pngUrl = `${CDN_BASE}/${pngFile}`;
     uniqueFiles.add(ddsFile);
 
-    const rawImages = Array.isArray(raw.Image) ? raw.Image : raw.Image ? [raw.Image] : [];
+    const rawImages = Array.isArray(raw.Image)
+      ? raw.Image
+      : raw.Image
+        ? [raw.Image]
+      : [];
     const images = rawImages.map((img) => {
       const icon: UiImage = {
+        id: icons.length + 1,
         imageset: imagesetName,
         name: String(img.Name),
         ddsFile,
@@ -223,7 +258,7 @@ async function fetchAndParseUiImageset(): Promise<{
         offsetX: Number(img.OffsetX) || 0,
         offsetY: Number(img.OffsetY) || 0,
       };
-      icons[`${imagesetName}#${icon.name}`] = icon;
+      icons.push(icon);
       return icon;
     });
 
@@ -244,14 +279,17 @@ export async function fetchTextures(): Promise<void> {
   await fsp.mkdir(IOP_CACHE_DIR, { recursive: true });
   await fsp.mkdir(IMAGE_OUTPUT_DIR, { recursive: true });
 
+  const source = getSource();
+  console.log(`Using source: ${source.name}`);
+
   console.log("Loading patch manifest...");
-  const manifest = await downloadAndExtractManifest();
+  const manifest = await source.getManifest();
   console.log(`Manifest contains ${manifest.size} entries`);
 
   console.log("Fetching and parsing uiimageset.xml...");
-  const { imagesets, icons, uniqueFiles } = await fetchAndParseUiImageset();
+  const { imagesets, icons, uniqueFiles } = await fetchAndParseUiImageset(source);
   console.log(
-    `Parsed ${imagesets.length} imagesets, ${Object.keys(icons).length} icons, ${uniqueFiles.length} texture files`,
+    `Parsed ${imagesets.length} imagesets, ${icons.length} icons, ${uniqueFiles.length} texture files`,
   );
 
   await writeJson(path.join(DATA_DIR, "ui-imageset.json"), imagesets);
@@ -260,9 +298,9 @@ export async function fetchTextures(): Promise<void> {
 
   const failed: { file: string; error?: string }[] = [];
 
-  console.log(`Downloading/extracting ${uniqueFiles.length} texture files...`);
+  console.log(`Resolving ${uniqueFiles.length} texture files...`);
   await runWithConcurrency(uniqueFiles, 5, async (file) => {
-    const result = await extractDdsOrAsset(file, manifest);
+    const result = await resolveTextureFile(file, source, manifest);
     if (result.ok) {
       console.log(`  ${file}`);
     } else {
@@ -280,15 +318,18 @@ export async function fetchTextures(): Promise<void> {
 
   if (failed.length > 0) {
     await writeJson(path.join(DATA_DIR, "failed-ui-images.json"), failed);
-    console.warn(`${failed.length} texture files failed to download/extract`);
+    console.warn(`${failed.length} texture files failed to resolve`);
   }
   if (conversionFailed.length > 0) {
-    await writeJson(path.join(DATA_DIR, "failed-ui-conversions.json"), conversionFailed);
+    await writeJson(
+      path.join(DATA_DIR, "failed-ui-conversions.json"),
+      conversionFailed,
+    );
     console.warn(`${conversionFailed.length} DDS files failed to convert`);
   }
 
   console.log(
-    `Done. ${uniqueFiles.length - failed.length}/${uniqueFiles.length} textures extracted, ${uniqueFiles.length - conversionFailed.length} PNGs generated.`,
+    `Done. ${uniqueFiles.length - failed.length}/${uniqueFiles.length} textures resolved, ${uniqueFiles.length - conversionFailed.length} PNGs generated.`,
   );
 }
 

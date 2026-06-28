@@ -31,7 +31,7 @@ function writeChunk(type: string, data: Buffer, table: Uint32Array): Buffer {
   return Buffer.concat([lenBuf, typeBuf, data, crcBuf]);
 }
 
-function writePngRgba(width: number, height: number, rgba: Buffer): Buffer {
+export function writePngRgba(width: number, height: number, rgba: Buffer): Buffer {
   const table = crcTable ?? (crcTable = makeCrcTable());
   const signature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 

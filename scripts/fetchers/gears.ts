@@ -11,6 +11,7 @@ import { readJson, writeJson } from "../lib/utils";
 import type { Hero } from "../lib/types";
 
 export interface GearIcon {
+  id: number;
   imageset: string;
   name: string;
   pngUrl: string;
@@ -18,6 +19,23 @@ export interface GearIcon {
   y: number;
   width: number;
   height: number;
+}
+
+interface CdnIcon {
+  id: number;
+  imageset: string;
+  name: string;
+  iconPngUrl: string;
+  width: number;
+  height: number;
+}
+
+function buildCdnIconMap(icons: CdnIcon[]): Record<string, CdnIcon> {
+  const map: Record<string, CdnIcon> = {};
+  for (const icon of icons) {
+    map[`${icon.imageset}#${icon.name}`] = icon;
+  }
+  return map;
 }
 
 export interface GearSkill {
@@ -56,7 +74,7 @@ interface IniSection {
 }
 
 const HERO_LOCAL_PATH = path.join("data", "hero-local.json");
-const UI_ICONS_PATH = path.join("data", "ui-icons.json");
+const ICON_CDN_PATH = path.join("data", "icon-cdn.json");
 
 function decodeKorean(buf: Buffer): string {
   try {
@@ -163,7 +181,7 @@ export async function fetchGears(): Promise<void> {
   await fsp.mkdir(IOP_CACHE_DIR, { recursive: true });
 
   const heroes = await readJson<Hero[]>(HERO_LOCAL_PATH);
-  const uiIcons = await readJson<Record<string, GearIcon>>(UI_ICONS_PATH);
+  const uiIcons = buildCdnIconMap(await readJson<CdnIcon[]>(ICON_CDN_PATH));
 
   const heroByCode = new Map<string, Hero>(heroes.map((h) => [h.code, h]));
   const gears: Gear[] = [];
@@ -187,7 +205,19 @@ export async function fetchGears(): Promise<void> {
         const id = heroGear ? heroGear.id : Number(`${hero.code}${String(itemNumber).padStart(2, "0")}`);
 
         const iconKey = f.item_large_icon0 || heroGear?.icon;
-        const icon = iconKey ? uiIcons[iconKey] ?? null : null;
+        const cdnIcon = iconKey ? uiIcons[iconKey] ?? null : null;
+        const icon: GearIcon | null = cdnIcon
+          ? {
+              id: cdnIcon.id,
+              imageset: cdnIcon.imageset,
+              name: cdnIcon.name,
+              pngUrl: cdnIcon.iconPngUrl,
+              x: 0,
+              y: 0,
+              width: cdnIcon.width,
+              height: cdnIcon.height,
+            }
+          : null;
 
         const stats = extractStats(f);
 
@@ -221,7 +251,19 @@ export async function fetchGears(): Promise<void> {
         const code = normalizeNumber(f.code) ?? Number(`${hero.code}${String(itemNumber).padStart(2, "0")}`);
 
         const iconKey = f.item_large_icon0;
-        const icon = iconKey ? uiIcons[iconKey] ?? null : null;
+        const cdnIcon = iconKey ? uiIcons[iconKey] ?? null : null;
+        const icon: GearIcon | null = cdnIcon
+          ? {
+              id: cdnIcon.id,
+              imageset: cdnIcon.imageset,
+              name: cdnIcon.name,
+              pngUrl: cdnIcon.iconPngUrl,
+              x: 0,
+              y: 0,
+              width: cdnIcon.width,
+              height: cdnIcon.height,
+            }
+          : null;
 
         gears.push({
           id: code,

@@ -18,7 +18,10 @@ const PET_EAT_NAME = "sp2_pet_eat_info.ini";
 const PET_MANUAL_IOP = "config/sp2_pet_inven_manual.ini.iop";
 const PET_MANUAL_NAME = "sp2_pet_inven_manual.ini";
 
+const ICON_CDN_JSON = path.join("data", "icon-cdn.json");
+
 export interface PetIcon {
+  id: number;
   imageset: string;
   name: string;
   pngUrl: string;
@@ -26,6 +29,23 @@ export interface PetIcon {
   y: number;
   width: number;
   height: number;
+}
+
+interface CdnIcon {
+  id: number;
+  imageset: string;
+  name: string;
+  iconPngUrl: string;
+  width: number;
+  height: number;
+}
+
+function buildCdnIconMap(icons: CdnIcon[]): Record<string, CdnIcon> {
+  const map: Record<string, CdnIcon> = {};
+  for (const icon of icons) {
+    map[`${icon.imageset}#${icon.name}`] = icon;
+  }
+  return map;
 }
 
 export interface PetManualSegment {
@@ -215,7 +235,7 @@ function parsePetId(sectionName: string): number | null {
 
 function parsePetViews(
   f: Record<string, string>,
-  icons: Record<string, PetIcon>,
+  icons: Record<string, CdnIcon>,
 ): PetView[] {
   const count = normalizeNumber(f.icon_cnt) ?? 0;
   const views: PetView[] = [];
@@ -233,11 +253,23 @@ function parsePetViews(
       z: normalizeFloat(f[`${prefix}_model_scale_z`]) ?? 1,
     };
 
+    const cdnIcon = iconKey ? icons[iconKey] ?? null : null;
     views.push({
       rank,
       name,
       iconKey,
-      icon: iconKey ? icons[iconKey] ?? null : null,
+      icon: cdnIcon
+        ? {
+            id: cdnIcon.id,
+            imageset: cdnIcon.imageset,
+            name: cdnIcon.name,
+            pngUrl: cdnIcon.iconPngUrl,
+            x: 0,
+            y: 0,
+            width: cdnIcon.width,
+            height: cdnIcon.height,
+          }
+        : null,
       model,
       scale,
       ani,
@@ -262,7 +294,7 @@ function parseNumberArray(
 function transformToPets(
   sections: Array<{ name: string; fields: Record<string, string> }>,
   manuals: Record<number, PetManual>,
-  icons: Record<string, PetIcon>,
+  icons: Record<string, CdnIcon>,
 ): Pet[] {
   return sections
     .map((section): Pet | null => {
@@ -345,9 +377,7 @@ export async function fetchPets(): Promise<void> {
     `Wrote ${Object.keys(manuals).length} manuals to data/pet-manuals.json`,
   );
 
-  const icons = await readJson<Record<string, PetIcon>>(
-    path.join("data", "ui-icons.json"),
-  );
+  const icons = buildCdnIconMap(await readJson<CdnIcon[]>(ICON_CDN_JSON));
 
   const pets = transformToPets(infoSections, manuals, icons);
   await writeJson(path.join("data", "pets.json"), pets);

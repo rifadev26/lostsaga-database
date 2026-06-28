@@ -7,6 +7,8 @@
   "packageManager": "pnpm@11.8.0",
   "scripts": {
     "fetch-data": "tsx scripts/index.ts",
+    "fetch-textures": "tsx scripts/fetchers/textures.ts",
+    "build-icon-cdn": "tsx scripts/fetchers/icon-cdn.ts",
     "typecheck": "tsc --noEmit && pnpm -F @lostsaga/site typecheck",
     "dev": "pnpm -F @lostsaga/site dev",
     "build": "pnpm -F @lostsaga/site build"
@@ -25,6 +27,7 @@
     "@marcuth/dds-to-png": "^0.0.4",
     "@types/node": "^22.0.0",
     "fast-xml-parser": "^5.9.3",
+    "sharp": "^0.33.5",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   }

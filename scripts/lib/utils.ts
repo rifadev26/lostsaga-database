@@ -1,6 +1,22 @@
 import fsp from "fs/promises";
 import path from "path";
 
+export interface IconWithKey {
+  imageset: string;
+  name: string;
+  [key: string]: unknown;
+}
+
+export function buildIconMap<T extends IconWithKey>(
+  icons: T[],
+): Record<string, T> {
+  const map: Record<string, T> = {};
+  for (const icon of icons) {
+    map[`${icon.imageset}#${icon.name}`] = icon;
+  }
+  return map;
+}
+
 export function isValidUrl(value: unknown): value is string {
   return typeof value === "string" && value.startsWith("http");
 }

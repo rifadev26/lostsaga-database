@@ -15,7 +15,10 @@ const MEDAL_INFO_NAME = "sp2_medalitem_info.ini";
 const MEDAL_MANUAL_IOP = "config/sp2_medal_inven_manual.ini.iop";
 const MEDAL_MANUAL_NAME = "sp2_medal_inven_manual.ini";
 
+const ICON_CDN_JSON = path.join("data", "icon-cdn.json");
+
 export interface MedalIcon {
+  id: number;
   imageset: string;
   name: string;
   pngUrl: string;
@@ -23,6 +26,23 @@ export interface MedalIcon {
   y: number;
   width: number;
   height: number;
+}
+
+interface CdnIcon {
+  id: number;
+  imageset: string;
+  name: string;
+  iconPngUrl: string;
+  width: number;
+  height: number;
+}
+
+function buildCdnIconMap(icons: CdnIcon[]): Record<string, CdnIcon> {
+  const map: Record<string, CdnIcon> = {};
+  for (const icon of icons) {
+    map[`${icon.imageset}#${icon.name}`] = icon;
+  }
+  return map;
 }
 
 export interface MedalManualSegment {
@@ -237,9 +257,7 @@ export async function fetchMedals(): Promise<void> {
     `Parsed ${Object.keys(manuals).length} medal manual entries`,
   );
 
-  const icons = await readJson<Record<string, MedalIcon>>(
-    path.join("data", "ui-icons.json"),
-  );
+  const icons = buildCdnIconMap(await readJson<CdnIcon[]>(ICON_CDN_JSON));
 
   const medals: Medal[] = infoSections
     .map((section): Medal | null => {
@@ -253,6 +271,8 @@ export async function fetchMedals(): Promise<void> {
 
       const iconKey = f.icon;
       const subIconKey = f.subicon;
+      const cdnIcon = iconKey ? icons[iconKey] ?? null : null;
+      const cdnSubIcon = subIconKey ? icons[subIconKey] ?? null : null;
 
       return {
         id,
@@ -266,8 +286,30 @@ export async function fetchMedals(): Promise<void> {
         itemGrowth: parseGrowth(f, "item_growth"),
         iconKey,
         subIconKey,
-        icon: iconKey ? icons[iconKey] ?? null : null,
-        subIcon: subIconKey ? icons[subIconKey] ?? null : null,
+        icon: cdnIcon
+          ? {
+              id: cdnIcon.id,
+              imageset: cdnIcon.imageset,
+              name: cdnIcon.name,
+              pngUrl: cdnIcon.iconPngUrl,
+              x: 0,
+              y: 0,
+              width: cdnIcon.width,
+              height: cdnIcon.height,
+            }
+          : null,
+        subIcon: cdnSubIcon
+          ? {
+              id: cdnSubIcon.id,
+              imageset: cdnSubIcon.imageset,
+              name: cdnSubIcon.name,
+              pngUrl: cdnSubIcon.iconPngUrl,
+              x: 0,
+              y: 0,
+              width: cdnSubIcon.width,
+              height: cdnSubIcon.height,
+            }
+          : null,
         manualId,
         manual,
         sellPeso: normalizeNumber(f.sell_peso) ?? 0,

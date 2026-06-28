@@ -24,7 +24,8 @@ The project provides:
 - **Runtime:** Node.js 18+ / TypeScript via `tsx`
 - **API calls:** Native `fetch()`
 - **File I/O:** `fs.promises` and Node.js streams
-- **Key libraries:** `fast-xml-parser`, `@marcuth/dds-to-png`
+- **Key libraries:** `fast-xml-parser`, `@marcuth/dds-to-png`, `sharp`
+- **Source modes:** remote patch server, local unpacked client, or local-first fallback via `SOURCE_MODE` / `LOCAL_UNPACKED_DIR`
 - **Outputs:**
   - `data/hero.json` — raw API hero data
   - `data/hero-local.json` — hero data with local asset paths
@@ -44,8 +45,10 @@ The project provides:
   - `data/quest-present-raw.json` — raw quest present sections
   - `data/quest-guide-raw.json` — raw quest guide sections
   - `data/ui-imageset.json` — UI texture imagesets
-  - `data/ui-icons.json` — keyed icon lookup for UI sprites
-  - `data/images/ui/` — extracted UI DDS/PNG assets
+  - `data/ui-icons.json` — UI sprite icons as an array with `id`
+  - `data/images/ui/` — extracted UI DDS/PNG sprite sheets
+  - `data/images/icon/` — individual UI icon PNGs for the LSIcon CDN
+  - `data/icon-cdn.json` — individual icon CDN entries as an array with `id`, `iconFile`, and `iconPngUrl`
   - `data/images/heroes/` — hero and gear image assets
 
 ### Website
@@ -64,9 +67,10 @@ Images are served via **jsDelivr** on top of the GitHub repository:
 ```text
 https://cdn.jsdelivr.net/gh/rifadev26/lostsaga-database@main/data/images/heroes/{hero.code}/icon_m.png
 https://cdn.jsdelivr.net/gh/rifadev26/lostsaga-database@main/data/images/ui/{uiImage.pngFile}
+https://cdn.jsdelivr.net/gh/rifadev26/lostsaga-database@main/data/images/icon/{imageset}%23{iconName}.png
 ```
 
-`data/ui-imageset.json` and `data/ui-icons.json` include a ready-to-use `pngUrl` field pointing to the jsDelivr CDN.
+`data/ui-imageset.json` and `data/ui-icons.json` include a ready-to-use `pngUrl` field pointing to the jsDelivr CDN. `data/icon-cdn.json` provides direct per-icon CDN URLs (`iconPngUrl`). Item, gear, medal, and pet records resolve their UI icons to individual `iconPngUrl` URLs with `x=0` and `y=0`.
 
 ## Repository Structure
 
@@ -94,7 +98,8 @@ lostsaga-database/
 │   ├── quest-present-raw.json   # raw quest present sections
 │   ├── quest-guide-raw.json     # raw quest guide sections
 │   ├── ui-imageset.json         # UI texture imagesets
-│   ├── ui-icons.json            # keyed icon lookup for UI sprites
+│   ├── ui-icons.json            # UI sprite icons as an array
+│   ├── icon-cdn.json            # individual icon CDN entries as an array
 │   └── images/                  # generated image assets
 ├── scripts/
 │   ├── index.ts                 # data fetching pipeline entrypoint
@@ -107,10 +112,14 @@ lostsaga-database/
 │   │   ├── gears.ts             # gear data fetcher
 │   │   ├── medals.ts            # medal data fetcher
 │   │   ├── pets.ts              # pet data fetcher
-│   │   └── quests.ts            # quest data fetcher
+│   │   ├── quests.ts            # quest data fetcher
+│   │   ├── textures.ts          # UI texture fetcher with local-first source support
+│   │   └── icon-cdn.ts          # builds individual icon PNGs and icon-cdn.json
 │   ├── lib/
 │   │   ├── iop.ts               # Lost Saga .iop extractor
 │   │   ├── dds-to-png.ts        # uncompressed DDS → PNG fallback
+│   │   ├── bmp-to-png.ts        # BMP → PNG conversion
+│   │   ├── source.ts            # local / server / fallback source abstraction
 │   │   └── ...
 │   └── debug/
 │       ├── extract-test.ts      # manual .iop extraction test
@@ -141,12 +150,12 @@ The `scripts/index.ts` pipeline runs through the fetchers in `scripts/fetchers/`
    - `data/hero-local.json`
    - `data/images/heroes/`
    - `data/failed-images.json` if any downloads fail.
-2. `fetchTextures()` — downloads the patch manifest, parses `uiimageset.xml`, extracts `.iop` texture archives, converts DDS sheets to PNG, and writes:
+2. `fetchTextures()` — parses `uiimageset.xml`, resolves texture files from the configured source (local unpacked tree or patch server), converts DDS/BMP sheets to PNG, and writes:
    - `data/ui-imageset.json`
    - `data/ui-icons.json`
    - `data/images/ui/`
    - `data/failed-ui-images.json` and `data/failed-ui-conversions.json` if anything fails.
-3. `fetchItems()` — downloads `config/sp2_etcitem_info.ini.iop`, extracts the INI, resolves UI icon references, and writes:
+3. `fetchItems()` — downloads `config/sp2_etcitem_info.ini.iop`, extracts the INI, resolves UI icon references from `icon-cdn.json`, and writes:
    - `data/etc-items.json`
 4. `fetchManuals()` — downloads `config/sp2_etc_manual.ini.iop`, applies the secondary XOR, parses `[ManualN]` sections, and writes:
    - `data/etc-manuals.json`
@@ -167,11 +176,22 @@ The `scripts/index.ts` pipeline runs through the fetchers in `scripts/fetchers/`
    - `data/quest-present-raw.json`
    - `data/quest-guide-raw.json`
 
+### Source configuration
+
+The pipeline supports three source modes configured through environment variables:
+
+- `LOCAL_UNPACKED_DIR` — root of an unpacked Lost Saga client tree (e.g. `D:\LostSaga\UNPACKED`)
+- `SOURCE_MODE` — `"local"`, `"server"`, or `"fallback"`. Defaults to `"fallback"` when `LOCAL_UNPACKED_DIR` is set.
+
+In fallback mode, the pipeline reads files from the local unpacked tree first and falls back to the remote patch server only when a file is missing.
+
 ### Running the pipeline
 
 ```bash
 pnpm install
-pnpm run fetch-data
+pnpm run fetch-data          # full pipeline
+pnpm run fetch-textures      # textures only (set LOCAL_UNPACKED_DIR for local-first)
+pnpm run build-icon-cdn      # generate individual icon PNGs + icon-cdn.json
 ```
 
 ## Website Implementation
@@ -200,9 +220,10 @@ pnpm run fetch-data
 ### Phase 3 — Tools
 
 - [x] Icon browser (`/tools/icon-browser`)
+- [x] LSIcon CDN (`/tools/icon-cdn`)
 - [x] Quest generator (`/tools/quest-generator`)
 - [x] Pass generator (`/tools/pass-generator`)
-- [ ] SRV ID generator (`/tools/srv-id-generator`)
+- [x] SRV ID generator (`/tools/srv-id-generator`)
 
 ### Phase 4 — Community Features
 

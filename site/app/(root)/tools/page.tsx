@@ -112,11 +112,11 @@ const allTools: Tool[] = [
     category: "Developer Utilities",
   },
   {
-    href: "#",
+    href: "/tools/icon-cdn",
     label: "LSIcon CDN",
-    description: "Serve Lost Saga PNG textures from a CDN endpoint.",
+    description: "Serve individual Lost Saga icons from a CDN endpoint.",
     icon: Cloud,
-    available: false,
+    available: true,
     category: "Developer Utilities",
   },
 ];
