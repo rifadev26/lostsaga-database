@@ -22,6 +22,9 @@ import {
   Bone,
   Wrench,
   Search,
+  LayoutGrid,
+  Scroll,
+  Key,
 } from "lucide-react";
 
 export const metadata = {
@@ -239,17 +242,43 @@ export default function HomePage() {
           <Wrench className="h-5 w-5" />
           <span>Tools</span>
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <Link
             href="/tools/icon-browser"
             className="group ls-card flex flex-col items-center gap-2 p-6 text-center transition-colors hover:border-primary/50 hover:bg-primary/5"
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#0e1626] text-primary transition-colors group-hover:bg-primary/10">
-              <Wrench className="h-6 w-6" />
+              <LayoutGrid className="h-6 w-6" />
             </div>
             <p className="text-sm font-bold text-foreground">Icon Browser</p>
             <p className="text-[10px] uppercase text-muted-foreground">
               Inspect UI sprites
+            </p>
+          </Link>
+
+          <Link
+            href="/tools/quest-generator"
+            className="group ls-card flex flex-col items-center gap-2 p-6 text-center transition-colors hover:border-primary/50 hover:bg-primary/5"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#0e1626] text-primary transition-colors group-hover:bg-primary/10">
+              <Scroll className="h-6 w-6" />
+            </div>
+            <p className="text-sm font-bold text-foreground">Quest Generator</p>
+            <p className="text-[10px] uppercase text-muted-foreground">
+              Build quest INI sections
+            </p>
+          </Link>
+
+          <Link
+            href="/tools/pass-generator"
+            className="group ls-card flex flex-col items-center gap-2 p-6 text-center transition-colors hover:border-primary/50 hover:bg-primary/5"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#0e1626] text-primary transition-colors group-hover:bg-primary/10">
+              <Key className="h-6 w-6" />
+            </div>
+            <p className="text-sm font-bold text-foreground">Password Generator</p>
+            <p className="text-[10px] uppercase text-muted-foreground">
+              Encrypt IOP passwords
             </p>
           </Link>
         </div>
