@@ -5,17 +5,17 @@ import { IopPasswordGenerator } from "@/components/IopPasswordGenerator";
 export const metadata = {
   title: "IOP Password Generator — Lost Saga Database",
   description:
-    "Encrypt and decrypt Lost Saga IOP archive passwords using the same XOR cipher as the client source. Supports known locale presets and custom passwords.",
+    "Encrypt and decrypt IOP archive passwords used by the LSAutoUpgrade and PatchManager modules. Supports known locale presets and custom passwords.",
   openGraph: {
     title: "IOP Password Generator — Lost Saga Database",
     description:
-      "Encrypt and decrypt Lost Saga IOP archive passwords using the client cipher.",
+      "Encrypt and decrypt IOP archive passwords used by LSAutoUpgrade and PatchManager.",
   },
   twitter: {
     card: "summary_large_image",
     title: "IOP Password Generator — Lost Saga Database",
     description:
-      "Encrypt and decrypt Lost Saga IOP archive passwords using the client cipher.",
+      "Encrypt and decrypt IOP archive passwords used by LSAutoUpgrade and PatchManager.",
   },
 };
 
@@ -35,17 +35,10 @@ export default function PassGeneratorPage() {
       </div>
 
       <p className="mb-6 text-sm text-muted-foreground">
-        Encrypt a plaintext password into the signed byte arrays used by the
-        Lost Saga client, or decrypt a known encoded array back to plaintext.
-        Matches{" "}
-        <code className="rounded bg-muted px-1 py-0.5 text-xs">
-          ioLocalManagerParent::EncryptDecryptData
-        </code>{" "}
-        with{" "}
-        <code className="rounded bg-muted px-1 py-0.5 text-xs">
-          bPassword = true
-        </code>
-        .
+        Encrypt a plaintext IOP password into the signed byte arrays used by the
+        LSAutoUpgrade and PatchManager executables, or decrypt a known encoded
+        array back to plaintext. The presets are taken directly from the local
+        source files.
       </p>
 
       <IopPasswordGenerator />
