@@ -2,6 +2,7 @@ import { Scroll } from "lucide-react";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { QuestGenerator } from "@/components/QuestGenerator";
 import { questPresents } from "@/lib/server/quest-presents";
+import { loadIconCdn } from "@/lib/server/icon-cdn";
 
 export const metadata = {
   title: "Quest Generator — Lost Saga Database",
@@ -20,7 +21,9 @@ export const metadata = {
   },
 };
 
-export default function QuestGeneratorPage() {
+export default async function QuestGeneratorPage() {
+  const icons = await loadIconCdn();
+
   return (
     <>
       <Breadcrumb
@@ -45,7 +48,7 @@ export default function QuestGeneratorPage() {
         the generated INI snippet on the right.
       </p>
 
-      <QuestGenerator presents={questPresents} />
+      <QuestGenerator presents={questPresents} icons={icons} />
     </>
   );
 }

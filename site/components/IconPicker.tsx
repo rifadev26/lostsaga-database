@@ -1,133 +1,73 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { loadUIIcons, getIconKey, type UIIcon } from "@/lib/ui-icons";
-import { Search, Loader2, ChevronDown, Check } from "lucide-react";
+import { getIconKey, type IconCdnEntry, type IconCdnMap } from "@/lib/ui-icons";
+import { Search, ChevronDown, Check } from "lucide-react";
 
 const MAX_RESULTS = 12;
 const ROW_ICON_SIZE = 20;
 const PREVIEW_SIZE = 64;
 
-interface ImageSetBounds {
-  width: number;
-  height: number;
-}
-
-function FixedIconSprite({
+function CdnIconThumb({
   icon,
   size,
-  bounds,
 }: {
-  icon: UIIcon;
+  icon: IconCdnEntry;
   size: number;
-  bounds: ImageSetBounds;
 }) {
-  const scale = size / Math.max(icon.width, icon.height);
+  const scale = Math.min(
+    size / Math.max(icon.width, icon.height, 1),
+    1,
+  );
+  const width = Math.floor(icon.width * scale);
+  const height = Math.floor(icon.height * scale);
 
   return (
     <div
       style={{ width: size, height: size }}
-      className="relative shrink-0 overflow-hidden rounded border border-[var(--border)] bg-[#0b1120]"
+      className="relative flex shrink-0 items-center justify-center overflow-hidden rounded border border-[var(--border)] bg-[#0b1120]"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={icon.pngUrl}
+        src={icon.iconPngUrl}
         alt={icon.name}
-        className="absolute left-0 top-0 max-w-none"
-        style={{
-          width: Math.floor(bounds.width * scale),
-          height: Math.floor(bounds.height * scale),
-          transform: `translate(${-Math.floor(icon.x * scale)}px, ${-Math.floor(icon.y * scale)}px)`,
-          imageRendering: "pixelated",
-        }}
+        width={width}
+        height={height}
+        className="max-h-full max-w-full object-contain"
+        style={{ imageRendering: "pixelated" }}
       />
     </div>
   );
 }
 
 export function IconPicker({
+  icons,
   value,
   onChange,
 }: {
+  icons: IconCdnMap;
   value: string;
   onChange: (key: string) => void;
 }) {
-  const [iconsByKey, setIconsByKey] = useState<Record<string, UIIcon>>({});
-  const [allKeys, setAllKeys] = useState<string[]>([]);
-  const [boundsByImageset, setBoundsByImageset] = useState<
-    Record<string, ImageSetBounds>
-  >({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
-    loadUIIcons()
-      .then((map) => {
-        if (cancelled) return;
-        const icons = Object.values(map).filter(
-          (icon) => icon.width > 0 && icon.height > 0,
-        );
-        const byKey: Record<string, UIIcon> = {};
-        const keys: string[] = [];
-        const bounds: Record<string, ImageSetBounds> = {};
-
-        icons.forEach((icon) => {
-          const key = getIconKey(icon);
-          byKey[key] = icon;
-          keys.push(key);
-
-          if (!bounds[icon.imageset]) {
-            bounds[icon.imageset] = { width: 0, height: 0 };
-          }
-          bounds[icon.imageset].width = Math.max(
-            bounds[icon.imageset].width,
-            icon.x + icon.width,
-          );
-          bounds[icon.imageset].height = Math.max(
-            bounds[icon.imageset].height,
-            icon.y + icon.height,
-          );
-        });
-
-        keys.sort((a, b) => a.localeCompare(b));
-        setIconsByKey(byKey);
-        setAllKeys(keys);
-        setBoundsByImageset(bounds);
-      })
-      .catch((err) => {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load icons");
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
+  const allKeys = useMemo(() => {
+    const keys: string[] = [];
+    for (const icon of Object.values(icons)) {
+      if (icon.width > 0 && icon.height > 0) {
+        keys.push(getIconKey(icon));
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    keys.sort((a, b) => a.localeCompare(b));
+    return keys;
+  }, [icons]);
 
   const selectedIcon = useMemo(() => {
     if (!value) return null;
-    return iconsByKey[value] ?? null;
-  }, [iconsByKey, value]);
+    return icons[value] ?? null;
+  }, [icons, value]);
 
   const filteredKeys = useMemo(() => {
     const q = value.trim().toLowerCase();
@@ -141,10 +81,6 @@ export function IconPicker({
     onChange(key);
     setOpen(false);
   };
-
-  const selectedBounds = selectedIcon
-    ? boundsByImageset[selectedIcon.imageset]
-    : null;
 
   return (
     <div ref={containerRef} className="space-y-2">
@@ -174,22 +110,13 @@ export function IconPicker({
 
       {open && (
         <div className="max-h-44 overflow-auto rounded-md border-2 border-[var(--border)] bg-[#111a2e] py-1">
-          {loading ? (
-            <div className="flex items-center justify-center gap-2 py-3 text-xs text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Loading...
-            </div>
-          ) : error ? (
-            <div className="py-3 text-center text-xs text-destructive">
-              {error}
-            </div>
-          ) : filteredKeys.length === 0 ? (
+          {filteredKeys.length === 0 ? (
             <div className="py-3 text-center text-xs text-muted-foreground">
               No icons found
             </div>
           ) : (
             filteredKeys.map((key) => {
-              const icon = iconsByKey[key];
-              const bounds = boundsByImageset[icon.imageset];
+              const icon = icons[key];
               const isSelected = value === key;
               return (
                 <button
@@ -202,11 +129,7 @@ export function IconPicker({
                       : "text-foreground hover:bg-[#172540]"
                   }`}
                 >
-                  <FixedIconSprite
-                    icon={icon}
-                    size={ROW_ICON_SIZE}
-                    bounds={bounds}
-                  />
+                  <CdnIconThumb icon={icon} size={ROW_ICON_SIZE} />
                   <span className="flex-1 truncate font-mono text-[11px]">
                     {key}
                   </span>
@@ -220,13 +143,9 @@ export function IconPicker({
         </div>
       )}
 
-      {selectedIcon && selectedBounds && (
+      {selectedIcon && (
         <div className="flex items-center gap-3 rounded-md border-2 border-[var(--border)] bg-[#0b1120] p-2">
-          <FixedIconSprite
-            icon={selectedIcon}
-            size={PREVIEW_SIZE}
-            bounds={selectedBounds}
-          />
+          <CdnIconThumb icon={selectedIcon} size={PREVIEW_SIZE} />
           <span className="truncate font-mono text-xs text-muted-foreground">
             {value}
           </span>

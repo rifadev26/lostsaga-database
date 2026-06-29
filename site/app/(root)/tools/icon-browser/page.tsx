@@ -1,6 +1,8 @@
-import { IconBrowser } from "@/components/IconBrowser";
-import { Breadcrumb } from "@/components/Breadcrumb";
 import { LayoutGrid } from "lucide-react";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { IconBrowser } from "@/components/IconBrowser";
+import { loadUIIcons } from "@/lib/server/ui-icons";
+import { loadUIImagesets } from "@/lib/server/ui-imageset";
 
 export const metadata = {
   title: "UI Icon Browser — Lost Saga Database",
@@ -8,7 +10,12 @@ export const metadata = {
     "Browse and search every UI sprite icon from Lost Saga, clipped from the game’s sprite sheets.",
 };
 
-export default function IconBrowserPage() {
+export default async function IconBrowserPage() {
+  const [icons, imagesets] = await Promise.all([
+    loadUIIcons(),
+    loadUIImagesets(),
+  ]);
+
   return (
     <>
       <Breadcrumb
@@ -23,7 +30,7 @@ export default function IconBrowserPage() {
         <span>UI Icon Browser</span>
       </div>
 
-      <IconBrowser />
+      <IconBrowser icons={icons} imagesets={imagesets} />
     </>
   );
 }

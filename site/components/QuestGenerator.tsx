@@ -31,6 +31,7 @@ import {
 } from "@/lib/quest";
 import { QuestPreview } from "@/components/QuestPreview";
 import { type QuestPresentInfo } from "@/lib/quest-present";
+import { type IconCdnMap } from "@/lib/ui-icons";
 
 const MONTH_OPTIONS = Array.from({ length: 12 }, (_, i) => ({
   value: i + 1,
@@ -267,8 +268,10 @@ function DateTimeField({
 
 export function QuestGenerator({
   presents,
+  icons,
 }: {
   presents: Record<number, QuestPresentInfo>;
+  icons: IconCdnMap;
 }) {
   const [quest, setQuest] = useState<Quest>(createDefaultQuest());
   const [activeSub, setActiveSub] = useState(1);
@@ -476,6 +479,7 @@ export function QuestGenerator({
               <SubQuestForm
                 key={sub.index}
                 sub={sub}
+                icons={icons}
                 onChange={(patch) => updateSubTask(sub.index, patch)}
               />
             ) : null,
@@ -488,7 +492,7 @@ export function QuestGenerator({
           <Scroll className="h-4 w-4" />
           <span className="text-sm">Preview</span>
         </div>
-        <QuestPreview quest={quest} presents={presents} />
+        <QuestPreview quest={quest} presents={presents} icons={icons} />
 
         <div className="border-t border-[var(--border)]" />
 
@@ -549,9 +553,11 @@ export function QuestGenerator({
 
 function SubQuestForm({
   sub,
+  icons,
   onChange,
 }: {
   sub: QuestSubTask;
+  icons: IconCdnMap;
   onChange: (patch: Partial<QuestSubTask>) => void;
 }) {
   const prefix = `sub${sub.index}`;
@@ -597,12 +603,14 @@ function SubQuestForm({
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Icon" htmlFor={`${prefix}-icon`}>
             <IconPicker
+              icons={icons}
               value={sub.icon}
               onChange={(icon) => onChange({ icon })}
             />
           </Field>
           <Field label="Sub Icon" htmlFor={`${prefix}-subicon`}>
             <IconPicker
+              icons={icons}
               value={sub.subIcon}
               onChange={(subIcon) => onChange({ subIcon })}
             />

@@ -1,13 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Search,
   X,
-  Loader2,
-  AlertCircle,
   LayoutGrid,
   ArrowLeft,
   Copy,
@@ -16,12 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import {
-  UIIcon,
-  UIImageset,
-  UI_ICONS_JSON_URL,
-  UI_IMAGESET_JSON_URL,
-} from "@/lib/ui-icons";
+import { UIIcon, UIImageset, type UIIconsMap } from "@/lib/ui-icons";
 
 const IMAGESET_PAGE_SIZE = 48;
 
@@ -96,37 +89,38 @@ function SheetOverlay({ icon, sheetSize }: SheetOverlayProps) {
   );
 }
 
-function LoadingState() {
-  return (
-    <div className="flex flex-col items-center justify-center gap-4 py-20 text-muted-foreground">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      <p className="text-sm font-semibold">Loading UI icon data...</p>
-    </div>
-  );
-}
+export function IconBrowser({
+  icons,
+  imagesets,
+}: {
+  icons: UIIconsMap;
+  imagesets: UIImageset[];
+}) {
+  const iconsByImageset = useMemo<Record<string, UIIcon[]>>(() => {
+    const grouped: Record<string, UIIcon[]> = {};
+    for (const icon of Object.values(icons)) {
+      if (icon.width <= 0 || icon.height <= 0) continue;
+      if (!grouped[icon.imageset]) grouped[icon.imageset] = [];
+      grouped[icon.imageset].push(icon);
+    }
+    for (const key of Object.keys(grouped)) {
+      grouped[key].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return grouped;
+  }, [icons]);
 
-function ErrorState({ message }: { message: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 py-20 text-muted-foreground">
-      <AlertCircle className="h-8 w-8 text-destructive" />
-      <p className="text-center text-sm font-semibold text-foreground">
-        Couldn&apos;t load icons
-      </p>
-      <p className="max-w-md text-center text-xs">{message}</p>
-    </div>
-  );
-}
+  const imagesetDetails = useMemo<Record<string, UIImageset>>(() => {
+    const map: Record<string, UIImageset> = {};
+    for (const set of imagesets) {
+      map[set.name] = set;
+    }
+    return map;
+  }, [imagesets]);
 
-export function IconBrowser() {
-  const [iconsByImageset, setIconsByImageset] = useState<
-    Record<string, UIIcon[]>
-  >({});
-  const [imagesets, setImagesets] = useState<string[]>([]);
-  const [imagesetDetails, setImagesetDetails] = useState<
-    Record<string, UIImageset>
-  >({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const imagesetNames = useMemo(
+    () => Object.keys(iconsByImageset).sort((a, b) => a.localeCompare(b)),
+    [iconsByImageset],
+  );
 
   const [query, setQuery] = useState("");
   const [imagesetPage, setImagesetPage] = useState(1);
@@ -138,83 +132,11 @@ export function IconBrowser() {
   } | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadData() {
-      try {
-        const [iconsRes, imagesetRes] = await Promise.all([
-          fetch(UI_ICONS_JSON_URL, { cache: "default" }),
-          fetch(UI_IMAGESET_JSON_URL, { cache: "default" }),
-        ]);
-
-        if (!iconsRes.ok) {
-          throw new Error(`Failed to load ui-icons.json (${iconsRes.status})`);
-        }
-        if (!imagesetRes.ok) {
-          throw new Error(
-            `Failed to load ui-imageset.json (${imagesetRes.status})`,
-          );
-        }
-
-        const [iconsMap, imagesetArray]: [
-          Record<string, UIIcon>,
-          UIImageset[],
-        ] = await Promise.all([iconsRes.json(), imagesetRes.json()]);
-
-        if (cancelled) return;
-
-        const grouped: Record<string, UIIcon[]> = {};
-        Object.values(iconsMap)
-          .filter((icon) => icon.width > 0 && icon.height > 0)
-          .forEach((icon) => {
-            if (!grouped[icon.imageset]) grouped[icon.imageset] = [];
-            grouped[icon.imageset].push(icon);
-          });
-
-        Object.keys(grouped).forEach((key) => {
-          grouped[key].sort((a, b) => a.name.localeCompare(b.name));
-        });
-
-        const imagesetMap: Record<string, UIImageset> = {};
-        imagesetArray.forEach((set) => {
-          imagesetMap[set.name] = set;
-        });
-
-        const imagesetNames = Object.keys(grouped).sort((a, b) =>
-          a.localeCompare(b),
-        );
-
-        setIconsByImageset(grouped);
-        setImagesetDetails(imagesetMap);
-        setImagesets(imagesetNames);
-      } catch (err) {
-        if (!cancelled) {
-          setError(
-            err instanceof Error
-              ? err.message
-              : "An unexpected error occurred while loading icon data.",
-          );
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    void loadData();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   const filteredImagesets = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return imagesets;
-    return imagesets.filter((name) => name.toLowerCase().includes(q));
-  }, [imagesets, query]);
+    if (!q) return imagesetNames;
+    return imagesetNames.filter((name) => name.toLowerCase().includes(q));
+  }, [imagesetNames, query]);
 
   const totalImagesetPages = useMemo(
     () => Math.max(1, Math.ceil(filteredImagesets.length / IMAGESET_PAGE_SIZE)),
@@ -289,9 +211,6 @@ export function IconBrowser() {
     }
   };
 
-  if (isLoading) return <LoadingState />;
-  if (error) return <ErrorState message={error} />;
-
   // Imageset selection screen
   if (!selectedImageset) {
     return (
@@ -327,7 +246,7 @@ export function IconBrowser() {
             </span>{" "}
             of{" "}
             <span className="font-bold text-foreground">
-              {imagesets.length.toLocaleString("en-US")}
+              {imagesetNames.length.toLocaleString("en-US")}
             </span>{" "}
             imagesets
             {query.trim() && " (filtered)"}

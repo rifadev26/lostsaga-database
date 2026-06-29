@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { type Quest } from "@/lib/quest";
 import {
   type QuestPresentInfo,
   formatPresentLabel,
 } from "@/lib/quest-present";
-import { loadUIIcons, type UIIcon } from "@/lib/ui-icons";
+import { type IconCdnEntry, type IconCdnMap } from "@/lib/ui-icons";
 import {
   Coins,
   Shirt,
@@ -26,6 +26,7 @@ import {
 interface QuestPreviewProps {
   quest: Quest;
   presents: Record<number, QuestPresentInfo>;
+  icons: IconCdnMap;
 }
 
 const PRESENT_ICONS: Record<number, React.ElementType> = {
@@ -56,48 +57,40 @@ function formatDate(date: { year: number; month: number; date: number; hour: num
   return `${date.year}-${String(date.month).padStart(2, "0")}-${String(date.date).padStart(2, "0")} ${String(date.hour).padStart(2, "0")}:00`;
 }
 
+function CdnIconImage({
+  icon,
+  size,
+}: {
+  icon: IconCdnEntry;
+  size: number;
+}) {
+  return (
+    <div
+      className="flex items-center justify-center overflow-hidden"
+      style={{ width: size, height: size }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={icon.iconPngUrl}
+        alt={icon.name}
+        className="max-h-full max-w-full object-contain"
+        style={{ imageRendering: "pixelated" }}
+      />
+    </div>
+  );
+}
+
 function QuestIconSprite({
+  icons,
   iconKey,
   subIconKey,
   size = 72,
 }: {
+  icons: IconCdnMap;
   iconKey: string;
   subIconKey?: string;
   size?: number;
 }) {
-  const [icons, setIcons] = useState<Record<string, UIIcon>>({});
-  const [bounds, setBounds] = useState<
-    Record<string, { width: number; height: number }>
-  >({});
-
-  useEffect(() => {
-    let cancelled = false;
-    loadUIIcons()
-      .then((map) => {
-        if (cancelled) return;
-        setIcons(map);
-        const b: Record<string, { width: number; height: number }> = {};
-        Object.values(map).forEach((icon) => {
-          if (!b[icon.imageset]) b[icon.imageset] = { width: 0, height: 0 };
-          b[icon.imageset].width = Math.max(
-            b[icon.imageset].width,
-            icon.x + icon.width,
-          );
-          b[icon.imageset].height = Math.max(
-            b[icon.imageset].height,
-            icon.y + icon.height,
-          );
-        });
-        setBounds(b);
-      })
-      .catch(() => {
-        // ignore
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   const icon = iconKey ? icons[iconKey] : undefined;
   const subIcon = subIconKey ? icons[subIconKey] : undefined;
 
@@ -112,43 +105,16 @@ function QuestIconSprite({
     );
   }
 
-  const bound = bounds[icon.imageset];
-  const scale = bound ? size / Math.max(bound.width, bound.height) : 1;
-
   return (
     <div
       className="relative shrink-0 overflow-hidden rounded-full"
       style={{ width: size, height: size }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={icon.pngUrl}
-        alt={icon.name}
-        className="absolute left-0 top-0 max-w-none"
-        style={{
-          width: bound ? Math.floor(bound.width * scale) : size,
-          height: bound ? Math.floor(bound.height * scale) : size,
-          transform: `translate(${-Math.floor(icon.x * scale)}px, ${-Math.floor(icon.y * scale)}px)`,
-          imageRendering: "pixelated",
-        }}
-      />
+      <CdnIconImage icon={icon} size={size} />
       {subIcon && (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img
-          src={subIcon.pngUrl}
-          alt={subIcon.name}
-          className="absolute left-0 top-0 max-w-none opacity-90"
-          style={{
-            width: bounds[subIcon.imageset]
-              ? Math.floor(bounds[subIcon.imageset].width * scale)
-              : size,
-            height: bounds[subIcon.imageset]
-              ? Math.floor(bounds[subIcon.imageset].height * scale)
-              : size,
-            transform: `translate(${-Math.floor(subIcon.x * scale)}px, ${-Math.floor(subIcon.y * scale)}px)`,
-            imageRendering: "pixelated",
-          }}
-        />
+        <div className="absolute left-0 top-0 opacity-90">
+          <CdnIconImage icon={subIcon} size={size} />
+        </div>
       )}
     </div>
   );
@@ -232,7 +198,7 @@ function SubTab({
   );
 }
 
-export function QuestPreview({ quest, presents }: QuestPreviewProps) {
+export function QuestPreview({ quest, presents, icons }: QuestPreviewProps) {
   const [activeSubIndex, setActiveSubIndex] = useState(
     quest.subTasks[0]?.index ?? 1,
   );
@@ -327,6 +293,7 @@ export function QuestPreview({ quest, presents }: QuestPreviewProps) {
                 )}
               >
                 <QuestIconSprite
+                  icons={icons}
                   iconKey={sub.icon}
                   subIconKey={sub.subIcon}
                   size={68}

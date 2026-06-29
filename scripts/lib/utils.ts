@@ -10,6 +10,11 @@ export interface IconWithKey {
 export function buildIconMap<T extends IconWithKey>(
   icons: T[],
 ): Record<string, T> {
+  if (!Array.isArray(icons)) {
+    throw new Error(
+      `Expected icons array, received ${icons === null ? "null" : typeof icons}`,
+    );
+  }
   const map: Record<string, T> = {};
   for (const icon of icons) {
     map[`${icon.imageset}#${icon.name}`] = icon;
