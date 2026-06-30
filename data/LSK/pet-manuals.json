@@ -1,0 +1,916 @@
+{
+  "1": {
+    "id": 1,
+    "text": "★아기몽치 - 몽치 - DJ몽치\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기몽치 - 몽치 - DJ몽치"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "2": {
+    "id": 2,
+    "text": "★아기부기 - 부기 - 태권부기\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기부기 - 부기 - 태권부기"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "3": {
+    "id": 3,
+    "text": "★아기바니 - 바니 - 라이더바니\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기바니 - 바니 - 라이더바니"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "4": {
+    "id": 4,
+    "text": "★아기코리 - 코리 - 세일러코리\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기코리 - 코리 - 세일러코리"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "5": {
+    "id": 5,
+    "text": "★아기냥이 - 냥이 - 마녀모자냥이\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기냥이 - 냥이 - 마녀모자냥이"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "6": {
+    "id": 6,
+    "text": "★아기도치 - 도치 - 까칠한도치\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기도치 - 도치 - 까칠한도치"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "7": {
+    "id": 7,
+    "text": "★아기피그 - 피그 - 젠틀맨피그\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기피그 - 피그 - 젠틀맨피그"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "8": {
+    "id": 8,
+    "text": "★아기꼬꼬 - 꼬꼬 - 인텔리꼬꼬\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기꼬꼬 - 꼬꼬 - 인텔리꼬꼬"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "9": {
+    "id": 9,
+    "text": "★이벤트 펫 천사 날개K\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 해당 펫은 #랭크 S 고정입니다.\n* 능력치는 3, 6, 9, 12, 15(Max)레벨\n##일 때 상승합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★이벤트 펫 천사 날개K"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 해당 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "고정입니다."
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "* 능력치는 3, 6, 9, 12, 15(Max)레벨"
+      },
+      {
+        "lineNo": 5,
+        "segmentNo": 1,
+        "text": "##일 때 상승합니다."
+      }
+    ]
+  },
+  "10": {
+    "id": 10,
+    "text": "★이벤트 펫 타락 날개K ★이벤트 펫 타락 날개K\n* 먹이는 * 먹이는 #1회당 50개씩 #1회당 50개씩 #소모합니다. #소모합니다.\n* 해당 펫은 * 해당 펫은 #랭크 S #랭크 S 고정입니다. 고정입니다.\n* 능력치는 3, 6, 9, 12, 15(Max)레벨 * 능력치는 3, 6, 9, 12, 15(Max)레벨\n##일 때 상승합니다. ##일 때 상승합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★이벤트 펫 타락 날개K"
+      },
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★이벤트 펫 타락 날개K"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 해당 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 해당 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "고정입니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "고정입니다."
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "* 능력치는 3, 6, 9, 12, 15(Max)레벨"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "* 능력치는 3, 6, 9, 12, 15(Max)레벨"
+      },
+      {
+        "lineNo": 5,
+        "segmentNo": 1,
+        "text": "##일 때 상승합니다."
+      },
+      {
+        "lineNo": 5,
+        "segmentNo": 1,
+        "text": "##일 때 상승합니다."
+      }
+    ]
+  },
+  "11": {
+    "id": 11,
+    "text": "★BOSS 펫 기간틱K\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 해당 펫은 #랭크 S 고정입니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★BOSS 펫 기간틱K"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 해당 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "고정입니다."
+      }
+    ]
+  },
+  "12": {
+    "id": 12,
+    "text": "★BOSS 펫 이프리트\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 해당 펫은 #랭크 S 고정입니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★BOSS 펫 이프리트"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 해당 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "고정입니다."
+      }
+    ]
+  },
+  "13": {
+    "id": 13,
+    "text": "★BOSS 펫 드라이어드\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 해당 펫은 #랭크 S 고정입니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★BOSS 펫 드라이어드"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 해당 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "고정입니다."
+      }
+    ]
+  },
+  "14": {
+    "id": 14,
+    "text": "★BOSS 펫 스노우 프린세스\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 해당 펫은 #랭크 S 고정입니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★BOSS 펫 스노우 프린세스"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 해당 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "고정입니다."
+      }
+    ]
+  },
+  "15": {
+    "id": 15,
+    "text": "★아기너굴 - 너굴 - 숲지기너굴\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기너굴 - 너굴 - 숲지기너굴"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "16": {
+    "id": 16,
+    "text": "★아기뿡이 - 뿡이 - 가스가스뿡이\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기뿡이 - 뿡이 - 가스가스뿡이"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "17": {
+    "id": 17,
+    "text": "★아기폭시 - 폭시 - 검사폭시\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기폭시 - 폭시 - 검사폭시"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "18": {
+    "id": 18,
+    "text": "★아기몽몽 - 몽몽 - 돌원숭이 몽몽\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 펫은 #랭크 B와 랭크 S 가 되면 모습이\n##변합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★아기몽몽 - 몽몽 - 돌원숭이 몽몽"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 B와 랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "가 되면 모습이"
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "##변합니다."
+      }
+    ]
+  },
+  "19": {
+    "id": 19,
+    "text": "★이벤트 순둥 양\n* 먹이는 #1회당 50개씩 #소모합니다.\n* 해당 펫은 #랭크 S 고정입니다.\n* 능력치는 3, 6, 9, 12, 15(Max)레벨\n##일 때 상승합니다.",
+    "rawSegments": [
+      {
+        "lineNo": 1,
+        "segmentNo": 1,
+        "text": "★이벤트 순둥 양"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 1,
+        "text": "* 먹이는"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 2,
+        "text": "#1회당 50개씩"
+      },
+      {
+        "lineNo": 2,
+        "segmentNo": 3,
+        "text": "#소모합니다."
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 1,
+        "text": "* 해당 펫은"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 2,
+        "text": "#랭크 S"
+      },
+      {
+        "lineNo": 3,
+        "segmentNo": 3,
+        "text": "고정입니다."
+      },
+      {
+        "lineNo": 4,
+        "segmentNo": 1,
+        "text": "* 능력치는 3, 6, 9, 12, 15(Max)레벨"
+      },
+      {
+        "lineNo": 5,
+        "segmentNo": 1,
+        "text": "##일 때 상승합니다."
+      }
+    ]
+  }
+}

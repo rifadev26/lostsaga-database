@@ -6,9 +6,10 @@
   "license": "MIT",
   "packageManager": "pnpm@11.8.0",
   "scripts": {
-    "fetch-data": "tsx scripts/index.ts",
-    "fetch-textures": "tsx scripts/fetchers/textures.ts",
-    "build-icon-cdn": "tsx scripts/fetchers/icon-cdn.ts",
+    "parse-data": "tsx scripts/parse/index.ts",
+    "parse-server": "tsx scripts/parse/index.ts",
+    "parse-textures": "tsx scripts/parse/textures.ts",
+    "parse-icon-cdn": "tsx scripts/parse/icon-cdn.ts",
     "typecheck": "tsc --noEmit && pnpm -F @lostsaga/site typecheck",
     "dev": "pnpm -F @lostsaga/site dev",
     "build": "pnpm -F @lostsaga/site build"

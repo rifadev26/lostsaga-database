@@ -19,6 +19,7 @@ const sortOptions = [
 interface PetListProps {
   pets: Pet[];
   petRanks: number[];
+  server: string;
   q?: string;
   baseRank?: string;
   maxRank?: string;
@@ -29,6 +30,7 @@ interface PetListProps {
 export function PetList({
   pets,
   petRanks,
+  server,
   q = "",
   baseRank = "",
   maxRank = "",
@@ -300,7 +302,7 @@ export function PetList({
             {paginatedPets.map((pet) => (
               <PreviewCard
                 key={pet.id}
-                href={`/pets/${pet.id}`}
+                href={`/${server}/pets/${pet.id}`}
                 name={displayName(pet)}
                 icon={displayIcon(pet)}
                 label="View Pet"

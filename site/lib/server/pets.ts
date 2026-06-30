@@ -1,30 +1,61 @@
-import fs from "fs";
-import path from "path";
+import { readFile } from "node:fs/promises";
 import type { Pet, PetFeedRank, PetManual } from "@/lib/pets";
+import { getServerDataPath } from "./path";
 
-const dataPath = path.join(process.cwd(), "..", "data", "pets.json");
-const raw = fs.readFileSync(dataPath, "utf8");
-export const pets: Pet[] = JSON.parse(raw);
+async function readPets(alias: string): Promise<Pet[]> {
+  const raw = await readFile(getServerDataPath(alias, "pets.json"), "utf8");
+  return JSON.parse(raw) as Pet[];
+}
 
-export const petById = new Map<number, Pet>(pets.map((pet) => [pet.id, pet]));
+export async function loadPets(alias: string): Promise<Pet[]> {
+  return readPets(alias);
+}
 
-const feedDataPath = path.join(process.cwd(), "..", "data", "pet-feed-info.json");
-const feedRaw = fs.readFileSync(feedDataPath, "utf8");
-export const petFeedRanks: PetFeedRank[] = JSON.parse(feedRaw);
+export async function loadPetById(alias: string): Promise<Map<number, Pet>> {
+  const pets = await readPets(alias);
+  return new Map(pets.map((pet) => [pet.id, pet]));
+}
 
-const manualDataPath = path.join(process.cwd(), "..", "data", "pet-manuals.json");
-const manualRaw = fs.readFileSync(manualDataPath, "utf8");
-const manualsRecord: Record<number, PetManual> = JSON.parse(manualRaw);
+export async function loadPetFeedRanks(
+  alias: string,
+): Promise<PetFeedRank[]> {
+  const raw = await readFile(
+    getServerDataPath(alias, "pet-feed-info.json"),
+    "utf8",
+  );
+  return JSON.parse(raw) as PetFeedRank[];
+}
 
-export const petManuals: PetManual[] = Object.values(manualsRecord);
+async function readPetManualsRecord(
+  alias: string,
+): Promise<Record<number, PetManual>> {
+  const raw = await readFile(
+    getServerDataPath(alias, "pet-manuals.json"),
+    "utf8",
+  );
+  return JSON.parse(raw) as Record<number, PetManual>;
+}
 
-export const petManualById = new Map<number, PetManual>(
-  Object.entries(manualsRecord).map(([id, manual]) => [Number(id), manual]),
-);
+export async function loadPetManuals(alias: string): Promise<PetManual[]> {
+  const record = await readPetManualsRecord(alias);
+  return Object.values(record);
+}
 
-export const petRanks = Array.from(
-  new Set(pets.flatMap((p) => [p.baseRank, p.maxRank])),
-).sort((a, b) => a - b);
+export async function loadPetManualById(
+  alias: string,
+): Promise<Map<number, PetManual>> {
+  const record = await readPetManualsRecord(alias);
+  return new Map(
+    Object.entries(record).map(([id, manual]) => [Number(id), manual]),
+  );
+}
+
+export async function loadPetRanks(alias: string): Promise<number[]> {
+  const pets = await readPets(alias);
+  return Array.from(
+    new Set(pets.flatMap((p) => [p.baseRank, p.maxRank])),
+  ).sort((a, b) => a - b);
+}
 
 export const petStatLabels = [
   "ATK",

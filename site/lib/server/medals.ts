@@ -1,27 +1,41 @@
-import fs from "fs";
-import path from "path";
+import { readFile } from "node:fs/promises";
 import type { Medal } from "@/lib/medals";
+import { getServerDataPath } from "./path";
 
-const dataPath = path.join(process.cwd(), "..", "data", "medals.json");
-const raw = fs.readFileSync(dataPath, "utf8");
-export const medals: Medal[] = JSON.parse(raw);
+async function readMedals(alias: string): Promise<Medal[]> {
+  const raw = await readFile(getServerDataPath(alias, "medals.json"), "utf8");
+  return JSON.parse(raw) as Medal[];
+}
 
-export const medalById = new Map<number, Medal>(
-  medals.map((medal) => [medal.id, medal]),
-);
+export async function loadMedals(alias: string): Promise<Medal[]> {
+  return readMedals(alias);
+}
 
-export const medalSubTypes = Array.from(
-  new Set(
-    medals
-      .map((m) => m.subMedalType)
-      .filter((t): t is number => t !== undefined),
-  ),
-).sort((a, b) => a - b);
+export async function loadMedalById(
+  alias: string,
+): Promise<Map<number, Medal>> {
+  const medals = await readMedals(alias);
+  return new Map(medals.map((medal) => [medal.id, medal]));
+}
 
-export const medalLimitLevels = Array.from(
-  new Set(
-    medals
-      .map((m) => m.limitLevel)
-      .filter((l): l is number => l !== undefined),
-  ),
-).sort((a, b) => a - b);
+export async function loadMedalSubTypes(alias: string): Promise<number[]> {
+  const medals = await readMedals(alias);
+  return Array.from(
+    new Set(
+      medals
+        .map((m) => m.subMedalType)
+        .filter((t): t is number => t !== undefined),
+    ),
+  ).sort((a, b) => a - b);
+}
+
+export async function loadMedalLimitLevels(alias: string): Promise<number[]> {
+  const medals = await readMedals(alias);
+  return Array.from(
+    new Set(
+      medals
+        .map((m) => m.limitLevel)
+        .filter((l): l is number => l !== undefined),
+    ),
+  ).sort((a, b) => a - b);
+}
