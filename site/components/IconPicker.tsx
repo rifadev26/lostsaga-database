@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { getIconKey, type IconCdnEntry, type IconCdnMap } from "@/lib/ui-icons";
 import { Search, ChevronDown, Check } from "lucide-react";
 
-const MAX_RESULTS = 12;
+const MAX_RESULTS = 100;
 const ROW_ICON_SIZE = 20;
 const PREVIEW_SIZE = 64;
 
@@ -52,6 +52,7 @@ export function IconPicker({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const [filter, setFilter] = useState("");
 
   const allKeys = useMemo(() => {
     const keys: string[] = [];
@@ -70,16 +71,28 @@ export function IconPicker({
   }, [icons, value]);
 
   const filteredKeys = useMemo(() => {
-    const q = value.trim().toLowerCase();
+    const q = filter.trim().toLowerCase();
     if (!q) return allKeys.slice(0, MAX_RESULTS);
     return allKeys
       .filter((key) => key.toLowerCase().includes(q))
       .slice(0, MAX_RESULTS);
-  }, [allKeys, value]);
+  }, [allKeys, filter]);
 
   const handleSelect = (key: string) => {
     onChange(key);
+    setFilter("");
     setOpen(false);
+  };
+
+  const handleFocus = () => {
+    setFilter("");
+    setOpen(true);
+  };
+
+  const handleInputChange = (next: string) => {
+    onChange(next);
+    setFilter(next);
+    setOpen(true);
   };
 
   return (
@@ -90,11 +103,8 @@ export function IconPicker({
           type="text"
           placeholder="Search icon keys (e.g. UIIconPack10#goods...)"
           value={value}
-          onFocus={() => setOpen(true)}
-          onChange={(e) => {
-            onChange(e.target.value);
-            setOpen(true);
-          }}
+          onFocus={handleFocus}
+          onChange={(e) => handleInputChange(e.target.value)}
           className="h-10 border-2 border-[var(--border)] bg-[#0b1120] pl-9 pr-10 text-sm"
         />
         <button
@@ -109,7 +119,7 @@ export function IconPicker({
       </div>
 
       {open && (
-        <div className="max-h-44 overflow-auto rounded-md border-2 border-[var(--border)] bg-[#111a2e] py-1">
+        <div className="max-h-80 overflow-auto rounded-md border-2 border-[var(--border)] bg-[#111a2e] py-1">
           {filteredKeys.length === 0 ? (
             <div className="py-3 text-center text-xs text-muted-foreground">
               No icons found
