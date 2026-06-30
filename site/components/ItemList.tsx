@@ -21,7 +21,7 @@ const sortOptions = [
 
 function ItemCard({ item }: { item: EtcItem }) {
   return (
-    <Link href={`/items/${item.id}`} className="group block cursor-pointer">
+    <Link href={`/items/${item.id}`} prefetch={false} className="group block cursor-pointer">
       <div className="ls-card flex items-center gap-3 p-3 h-full">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded bg-[#0b1120]">
           {item.icon ? (

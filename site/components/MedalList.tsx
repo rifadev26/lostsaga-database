@@ -20,7 +20,7 @@ const sortOptions = [
 
 function MedalCard({ medal }: { medal: Medal }) {
   return (
-    <Link href={`/medals/${medal.id}`} className="group block cursor-pointer">
+    <Link href={`/medals/${medal.id}`} prefetch={false} className="group block cursor-pointer">
       <div className="ls-card flex items-center gap-3 p-3 h-full">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded bg-[#0b1120]">
           {medal.icon ? (

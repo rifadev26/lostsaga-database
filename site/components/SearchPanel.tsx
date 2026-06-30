@@ -113,7 +113,7 @@ function petMatches(pet: Pet, query: string): boolean {
 
 function HeroResultCard({ hero }: { hero: Hero }) {
   return (
-    <Link href={`/heroes/${hero.code}`} className="group block">
+    <Link href={`/heroes/${hero.code}`} prefetch={false} className="group block">
       <div className="ls-card flex h-full flex-col overflow-hidden">
         <div className="ls-image-frame relative aspect-square w-full shrink-0">
           <ImageFallback
@@ -349,6 +349,7 @@ export function SearchPanel({
                 <div className="flex justify-end">
                   <Link
                     href={`${cat.href}?q=${encodeURIComponent(query.trim())}`}
+                    prefetch={false}
                     className="text-xs font-bold text-white/80 hover:text-white hover:underline"
                   >
                     View all {list.length.toLocaleString("en-US")} matching{" "}

@@ -19,7 +19,7 @@ export function PreviewCard({
   label = "View",
 }: PreviewCardProps) {
   return (
-    <Link href={href} className="group block">
+    <Link href={href} prefetch={false} className="group block">
       <div className="ls-card flex h-full flex-col overflow-hidden">
         <div className="ls-image-frame relative flex aspect-square w-full shrink-0 items-center justify-center">
           {icon ? (

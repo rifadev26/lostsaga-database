@@ -19,7 +19,7 @@ export function HeroCard({ hero }: HeroCardProps) {
   const TypeIcon = typeIcons[hero.type] ?? Star;
 
   return (
-    <Link href={`/heroes/${hero.code}`} className="group block">
+    <Link href={`/heroes/${hero.code}`} prefetch={false} className="group block">
       <div className="ls-card flex h-full flex-col overflow-hidden">
         <div className="ls-image-frame relative aspect-[3/4] w-full shrink-0 !rounded-none !bg-transparent">
           <ImageFallback
