@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import type { ItemIcon } from "@/lib/items";
-import { getIconCdnUrl } from "@/lib/ui-icons";
 
 interface ItemIconProps {
   icon: ItemIcon;
@@ -25,7 +24,7 @@ export function ItemIcon({ icon, maxSize = 48, className }: ItemIconProps) {
       }}
     >
       <Image
-        src={getIconCdnUrl(icon.imageset, icon.name)}
+        src={icon.pngUrl}
         alt={icon.name}
         width={scaledWidth}
         height={scaledHeight}

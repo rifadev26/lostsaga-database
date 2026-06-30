@@ -18,9 +18,9 @@ const sortOptions = [
   { value: "sell", label: "Sell Peso" },
 ];
 
-function MedalCard({ medal }: { medal: Medal }) {
+function MedalCard({ medal, server }: { medal: Medal; server: string }) {
   return (
-    <Link href={`/medals/${medal.id}`} prefetch={false} className="group block cursor-pointer">
+    <Link href={`/${server}/medals/${medal.id}`} prefetch={false} className="group block cursor-pointer">
       <div className="ls-card flex items-center gap-3 p-3 h-full">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded bg-[#0b1120]">
           {medal.icon ? (
@@ -74,6 +74,7 @@ function MedalCard({ medal }: { medal: Medal }) {
 interface MedalListProps {
   medals: Medal[];
   medalSubTypes: number[];
+  server: string;
   q?: string;
   subType?: string;
   hasManual?: string;
@@ -84,6 +85,7 @@ interface MedalListProps {
 export function MedalList({
   medals,
   medalSubTypes,
+  server,
   q = "",
   subType = "",
   hasManual = "",
@@ -346,7 +348,7 @@ export function MedalList({
         <>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {paginatedMedals.map((medal) => (
-              <MedalCard key={medal.id} medal={medal} />
+              <MedalCard key={medal.id} medal={medal} server={server} />
             ))}
           </div>
 

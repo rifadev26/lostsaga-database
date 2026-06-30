@@ -11,6 +11,7 @@ interface HeroListProps {
   heroes: Hero[];
   heroTypes: string[];
   heroRarities: string[];
+  server: string;
   q?: string;
   type?: string;
   rarity?: string;
@@ -30,6 +31,7 @@ export function HeroList({
   heroes,
   heroTypes,
   heroRarities,
+  server,
   q = "",
   type = "",
   rarity = "",
@@ -178,7 +180,7 @@ export function HeroList({
         {hasFilters && " (filtered)"}
       </p>
 
-      <HeroGrid heroes={paginatedHeroes} />
+      <HeroGrid heroes={paginatedHeroes} server={server} />
 
       <div className="flex flex-col items-center gap-3 pt-4 sm:flex-row sm:justify-between">
         <p className="text-sm text-muted-foreground">

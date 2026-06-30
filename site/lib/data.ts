@@ -40,13 +40,6 @@ export interface Hero {
   [key: string]: unknown;
 }
 
-export const ASSET_BASE =
-  "https://cdn.jsdelivr.net/gh/rifadev26/lostsaga-database@main/";
-
-export function getAssetUrl(assetPath: string): string {
-  return `${ASSET_BASE}${assetPath}`;
-}
-
 function uniqueTruthy<T>(arr: T[]): T[] {
   return arr.filter((v, i, a) => Boolean(v) && a.indexOf(v) === i) as T[];
 }

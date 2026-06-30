@@ -15,7 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { UIIcon, UIImageset, type UIIconsMap, getIconCdnUrl } from "@/lib/ui-icons";
+import { UIIcon, UIImageset, type UIIconsMap } from "@/lib/ui-icons";
 
 const IMAGESET_PAGE_SIZE = 48;
 
@@ -29,7 +29,7 @@ function IconSprite({ icon }: { icon: UIIcon }) {
       }}
     >
       <Image
-        src={getIconCdnUrl(icon.imageset, icon.name)}
+        src={icon.iconPngUrl}
         alt={`${icon.imageset}#${icon.name}`}
         width={icon.width}
         height={icon.height}

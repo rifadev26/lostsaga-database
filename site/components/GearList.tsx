@@ -18,9 +18,9 @@ const sortOptions = [
   { value: "source", label: "Source" },
 ];
 
-function GearCard({ gear }: { gear: Gear }) {
+function GearCard({ gear, server }: { gear: Gear; server: string }) {
   return (
-    <Link href={`/gears/${gear.id}`} prefetch={false} className="group block cursor-pointer">
+    <Link href={`/${server}/gears/${gear.id}`} prefetch={false} className="group block cursor-pointer">
       <div className="ls-card flex items-center gap-3 p-3 h-full">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded bg-[#0b1120]">
           {gear.icon ? (
@@ -75,6 +75,7 @@ interface GearListProps {
   gears: Gear[];
   gearTypes: string[];
   gearRarities: string[];
+  server: string;
   q?: string;
   type?: string;
   rarity?: string;
@@ -87,6 +88,7 @@ export function GearList({
   gears,
   gearTypes,
   gearRarities,
+  server,
   q = "",
   type = "",
   rarity = "",
@@ -384,7 +386,7 @@ export function GearList({
         <>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {paginatedGears.map((gear) => (
-              <GearCard key={gear.id} gear={gear} />
+              <GearCard key={gear.id} gear={gear} server={server} />
             ))}
           </div>
 

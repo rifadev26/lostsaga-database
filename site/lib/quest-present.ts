@@ -1,6 +1,10 @@
-import { type QuestPresentInfo } from "@/lib/server/quest-presents";
-
-export type { QuestPresentInfo };
+export interface QuestPresentInfo {
+  index: number;
+  type: number;
+  value1: number;
+  value2: number;
+  period: number;
+}
 
 export const PRESENT_TYPE_LABELS: Record<number, string> = {
   1: "Peso",

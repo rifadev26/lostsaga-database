@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { Swords, Crosshair, Sparkles, Star, Info } from "lucide-react";
 import { ImageFallback } from "./ImageFallback";
-import { Hero, getAssetUrl, getHeroCardImageCandidates } from "@/lib/data";
+import { Hero, getHeroCardImageCandidates } from "@/lib/data";
 
 interface HeroCardProps {
   hero: Hero;
+  server: string;
 }
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -14,12 +15,12 @@ const typeIcons: Record<string, React.ElementType> = {
   special: Star,
 };
 
-export function HeroCard({ hero }: HeroCardProps) {
-  const cardSrcs = getHeroCardImageCandidates(hero).map(getAssetUrl);
+export function HeroCard({ hero, server }: HeroCardProps) {
+  const cardSrcs = getHeroCardImageCandidates(hero);
   const TypeIcon = typeIcons[hero.type] ?? Star;
 
   return (
-    <Link href={`/heroes/${hero.code}`} prefetch={false} className="group block">
+    <Link href={`/${server}/heroes/${hero.code}`} prefetch={false} className="group block">
       <div className="ls-card flex h-full flex-col overflow-hidden">
         <div className="ls-image-frame relative aspect-[3/4] w-full shrink-0 !rounded-none !bg-transparent">
           <ImageFallback

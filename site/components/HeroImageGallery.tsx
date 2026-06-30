@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   Hero,
-  getAssetUrl,
   getHeroArtworkCandidates,
   getHeroIconCandidates,
 } from "@/lib/data";
@@ -16,13 +15,12 @@ export function HeroImageGallery({ hero }: { hero: Hero }) {
       ...getHeroArtworkCandidates(hero),
       ...getHeroIconCandidates(hero),
     ].filter((v, i, a) => Boolean(v) && a.indexOf(v) === i);
-    return paths.map(getAssetUrl);
+    return paths;
   }, [hero]);
 
   const makeSrcs = (path?: string) => {
     if (!path) return allHeroSrcs;
-    const target = getAssetUrl(path);
-    return [target, ...allHeroSrcs.filter((s) => s !== target)];
+    return [path, ...allHeroSrcs.filter((s) => s !== path)];
   };
 
   const slots = useMemo(
@@ -56,7 +54,7 @@ export function HeroImageGallery({ hero }: { hero: Hero }) {
       {slots.length > 0 && (
         <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
           {slots.map((slot) => {
-            const target = getAssetUrl(slot.path);
+            const target = slot.path;
             const isActive = activeSrcs[0] === target;
             return (
               <button

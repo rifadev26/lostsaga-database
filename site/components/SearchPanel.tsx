@@ -16,7 +16,7 @@ import {
   Bone,
 } from "lucide-react";
 import type { Hero } from "@/lib/data";
-import { getAssetUrl, getHeroCardImageCandidates } from "@/lib/data";
+import { getHeroCardImageCandidates } from "@/lib/data";
 import type { EtcItem } from "@/lib/items";
 import type { Gear } from "@/lib/gears";
 import type { Medal } from "@/lib/medals";
@@ -50,6 +50,7 @@ interface SearchPanelProps {
   gears: Gear[];
   medals: Medal[];
   pets: Pet[];
+  server: string;
   initialQuery: string;
   initialCategory: Category;
 }
@@ -111,13 +112,13 @@ function petMatches(pet: Pet, query: string): boolean {
   );
 }
 
-function HeroResultCard({ hero }: { hero: Hero }) {
+function HeroResultCard({ hero, server }: { hero: Hero; server: string }) {
   return (
-    <Link href={`/heroes/${hero.code}`} prefetch={false} className="group block">
+    <Link href={`/${server}/heroes/${hero.code}`} prefetch={false} className="group block">
       <div className="ls-card flex h-full flex-col overflow-hidden">
         <div className="ls-image-frame relative aspect-square w-full shrink-0">
           <ImageFallback
-            srcs={getHeroCardImageCandidates(hero).map(getAssetUrl)}
+            srcs={getHeroCardImageCandidates(hero)}
             alt={hero.name}
             fill
             objectFit="cover"
@@ -147,6 +148,7 @@ export function SearchPanel({
   gears,
   medals,
   pets,
+  server,
   initialQuery,
   initialCategory,
 }: SearchPanelProps) {
@@ -300,13 +302,13 @@ export function SearchPanel({
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
                 {cat.key === "heroes" ? (
                   (preview as Hero[]).map((hero) => (
-                    <HeroResultCard key={hero.code} hero={hero} />
+                    <HeroResultCard key={hero.code} hero={hero} server={server} />
                   ))
                 ) : cat.key === "items" ? (
                   (preview as EtcItem[]).map((item) => (
                     <PreviewCard
                       key={item.id}
-                      href={`/items/${item.id}`}
+                      href={`/${server}/items/${item.id}`}
                       name={item.name || item.shopName}
                       icon={item.icon}
                       label="View Item"
@@ -316,7 +318,7 @@ export function SearchPanel({
                   (preview as Gear[]).map((gear) => (
                     <PreviewCard
                       key={gear.id}
-                      href={`/gears/${gear.id}`}
+                      href={`/${server}/gears/${gear.id}`}
                       name={gear.name}
                       icon={gear.icon}
                       label="View Gear"
@@ -326,7 +328,7 @@ export function SearchPanel({
                   (preview as Medal[]).map((medal) => (
                     <PreviewCard
                       key={medal.id}
-                      href={`/medals/${medal.id}`}
+                      href={`/${server}/medals/${medal.id}`}
                       name={medal.name}
                       icon={medal.icon}
                       label="View Medal"
@@ -336,7 +338,7 @@ export function SearchPanel({
                   (preview as Pet[]).map((pet) => (
                     <PreviewCard
                       key={pet.id}
-                      href={`/pets/${pet.id}`}
+                      href={`/${server}/pets/${pet.id}`}
                       name={pet.views[0]?.name || `Pet #${pet.id}`}
                       icon={pet.views[0]?.icon ?? null}
                       label="View Pet"
@@ -348,7 +350,7 @@ export function SearchPanel({
               {hasMore && (
                 <div className="flex justify-end">
                   <Link
-                    href={`${cat.href}?q=${encodeURIComponent(query.trim())}`}
+                    href={`/${server}${cat.href}?q=${encodeURIComponent(query.trim())}`}
                     prefetch={false}
                     className="text-xs font-bold text-white/80 hover:text-white hover:underline"
                   >

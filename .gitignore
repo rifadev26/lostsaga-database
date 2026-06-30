@@ -25,6 +25,9 @@ data/failed-ui-images.json
 data/failed-ui-conversions.json
 data/failed-icon-cdn.json
 
+# Static assets are hosted from the separate lostsaga-assets repo
+site/public/images/
+
 # Pipeline caches and generated assets
 data/.cache/
 data/images/ui/*.dds

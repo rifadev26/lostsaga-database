@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import { readFile } from "node:fs/promises";
+import { getServerDataPath } from "./path";
 
 export interface Skill {
   name: string;
@@ -43,14 +43,26 @@ export interface Hero {
   [key: string]: unknown;
 }
 
-const dataPath = path.join(process.cwd(), "..", "data", "hero-local.json");
-const raw = fs.readFileSync(dataPath, "utf8");
-export const heroes: Hero[] = JSON.parse(raw);
+async function readHeroes(alias: string): Promise<Hero[]> {
+  const raw = await readFile(getServerDataPath(alias, "mercenary.json"), "utf8");
+  return JSON.parse(raw) as Hero[];
+}
 
-export const heroByCode = new Map<string, Hero>(heroes.map((h) => [h.code, h]));
+export async function loadHeroes(alias: string): Promise<Hero[]> {
+  return readHeroes(alias);
+}
 
-export const heroTypes = Array.from(new Set(heroes.map((h) => h.type))).sort();
+export async function loadHeroByCode(alias: string): Promise<Map<string, Hero>> {
+  const heroes = await readHeroes(alias);
+  return new Map(heroes.map((h) => [h.code, h]));
+}
 
-export const heroRarities = Array.from(
-  new Set(heroes.map((h) => h.rarity))
-).sort();
+export async function loadHeroTypes(alias: string): Promise<string[]> {
+  const heroes = await readHeroes(alias);
+  return Array.from(new Set(heroes.map((h) => h.type))).sort();
+}
+
+export async function loadHeroRarities(alias: string): Promise<string[]> {
+  const heroes = await readHeroes(alias);
+  return Array.from(new Set(heroes.map((h) => h.rarity))).sort();
+}

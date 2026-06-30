@@ -19,9 +19,9 @@ const sortOptions = [
   { value: "cash", label: "Cash" },
 ];
 
-function ItemCard({ item }: { item: EtcItem }) {
+function ItemCard({ item, server }: { item: EtcItem; server: string }) {
   return (
-    <Link href={`/items/${item.id}`} prefetch={false} className="group block cursor-pointer">
+    <Link href={`/${server}/items/${item.id}`} prefetch={false} className="group block cursor-pointer">
       <div className="ls-card flex items-center gap-3 p-3 h-full">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded bg-[#0b1120]">
           {item.icon ? (
@@ -78,6 +78,7 @@ function ItemCard({ item }: { item: EtcItem }) {
 interface ItemListProps {
   items: EtcItem[];
   itemGroups: number[];
+  server: string;
   q?: string;
   group?: string;
   type?: string;
@@ -88,6 +89,7 @@ interface ItemListProps {
 export function ItemList({
   items,
   itemGroups,
+  server,
   q = "",
   group = "",
   type = "",
@@ -330,7 +332,7 @@ export function ItemList({
         <>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {paginatedItems.map((item) => (
-              <ItemCard key={item.id} item={item} />
+              <ItemCard key={item.id} item={item} server={server} />
             ))}
           </div>
 

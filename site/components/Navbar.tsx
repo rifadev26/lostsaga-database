@@ -2,19 +2,20 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Users, Package, Backpack, Shield, Bone, Wrench, Menu, X } from "lucide-react";
-
-const navItems = [
-  { href: "/heroes", label: "Heroes", sub: "Database", icon: Users },
-  { href: "/items", label: "Items", sub: "Compendium", icon: Package },
-  { href: "/gears", label: "Gears", sub: "Equipment", icon: Backpack },
-  { href: "/medals", label: "Medals", sub: "Collection", icon: Shield },
-  { href: "/pets", label: "Pets", sub: "Companions", icon: Bone },
-  { href: "/tools", label: "Tools", sub: "Utilities", icon: Wrench },
-];
+import {
+  Home,
+  Wrench,
+  Menu,
+  X,
+} from "lucide-react";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navItems = [
+    { href: "/", label: "Home", sub: "Overview", icon: Home },
+    { href: "/tools", label: "Tools", sub: "Utilities", icon: Wrench },
+  ];
 
   return (
     <nav
