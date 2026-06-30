@@ -386,9 +386,13 @@ export function generateQuestIni(quest: Quest): string {
   lines.push(`[quest${quest.id}]`);
   lines.push(`class_name=${quest.className}`);
   lines.push(`main_index=${quest.mainIndex}`);
-  lines.push(`max_sub_quest=${quest.maxSubQuest}`);
+  lines.push(`max_sub_quest=${quest.maxSubQuest}\n`);
 
   for (const sub of quest.subTasks) {
+    if (sub.index > 1) {
+      lines.push("");
+    }
+
     const prefix = `sub${sub.index}_`;
     const push = (key: string, value: string | number) => {
       lines.push(`${prefix}${key}=${value}`);
@@ -446,7 +450,11 @@ export function generateQuestIni(quest: Quest): string {
     push("complete_web_alarm", sub.completeWebAlarm);
 
     push("max_reward", sub.maxReward);
-    for (let i = 0; i < Math.max(sub.maxReward, sub.rewardPresents.length); i++) {
+    for (
+      let i = 0;
+      i < Math.max(sub.maxReward, sub.rewardPresents.length);
+      i++
+    ) {
       push(`reward_present${i + 1}`, sub.rewardPresents[i] ?? 0);
     }
 
