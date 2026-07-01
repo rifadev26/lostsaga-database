@@ -1,27 +1,4 @@
-export interface Skill {
-  name: string;
-  icon?: string;
-  emoticon?: string;
-  extra?: string | null;
-  desc?: string;
-  desc_name?: string;
-  desc_kr?: string;
-  [key: string]: unknown;
-}
-
-export interface Gear {
-  id: number;
-  slug: string;
-  name: string;
-  name_kr?: string;
-  rarity: string;
-  code: string;
-  item_type: string;
-  sub_type: string;
-  icon: string;
-  skill: Skill;
-  [key: string]: unknown;
-}
+import type { Gear } from "@/lib/gears";
 
 export interface Hero {
   name: string;
